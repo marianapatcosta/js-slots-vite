@@ -1,0 +1,43 @@
+.reel {
+  padding: $reel-padding;
+  background-color: var(--color-secondary);
+  border-radius: 0.5rem;
+  -webkit-border-radius: 0.5rem;
+  -moz-border-radius: 0.5rem;
+  -ms-border-radius: 0.5rem;
+  -o-border-radius: 0.5rem;
+  overflow: hidden;
+  height: calc($symbol-size * $rows-number + $reel-padding * 2);
+
+  &:first-child {
+    transform: rotate(-1.5deg);
+    -webkit-transform: rotate(-1.5deg);
+    -moz-transform: rotate(-1.5deg);
+    -ms-transform: rotate(-1.5deg);
+    -o-transform: rotate(-1.5deg);
+  }
+
+  &:nth-child(2) {
+    transform: rotate(-0.5deg);
+    -webkit-transform: rotate(-0.5deg);
+    -moz-transform: rotate(-0.5deg);
+    -ms-transform: rotate(-0.5deg);
+    -o-transform: rotate(-0.5deg);
+  }
+
+  &:nth-child(4) {
+    transform: rotate(0.5deg);
+    -webkit-transform: rotate(0.5deg);
+    -moz-transform: rotate(0.5deg);
+    -ms-transform: rotate(0.5deg);
+    -o-transform: rotate(0.5deg);
+  }
+
+  &:last-child {
+    transform: rotate(1.5deg);
+    -webkit-transform: rotate(1.5deg);
+    -moz-transform: rotate(1.5deg);
+    -ms-transform: rotate(1.5deg);
+    -o-transform: rotate(1.5deg);
+  }
+}

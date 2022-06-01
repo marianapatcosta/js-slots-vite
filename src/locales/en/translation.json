@@ -1,0 +1,66 @@
+{
+  "about": {
+    "description": "Describes JavaScript Slots game.",
+    "title": "About"
+  },
+  "controllers": {
+    "autoSpin": "Auto Spin",
+    "bet": "Bet",
+    "changeBet": "Change game bet.",
+    "checkInfo": "Click to learn more about this game.",
+    "checkSettings": "Click to check and change game settings.",
+    "payLines": "Pay Lines",
+    "spin": "Spin"
+  },
+  "header": {
+    "copiedToClipboard": "Copied to clipboard.",
+    "share": "Share JS Slots",
+    "shareError": "It was not possible to share the link",
+    "shareTitle": "Check it out this nerdy JS Slots game!!!",
+    "shareText": "This is a link to JS Slots game",
+    "welcome": "Let's play the nerdiest slot machine on the earth!!!"
+  },
+  "footer": {
+    "developedBy": "Developed by {{name}}",
+    "findMe": "Find me on {{link}}",
+    "personalWebsite": "Personal Website"
+  },
+  "global": {
+    "anErrorOccurred": "An error occurred!",
+    "close": "Click to close the modal.",
+    "disable": "disable",
+    "enable": "enable",
+    "no": "No",
+    "ok": "OK",
+    "toastDismiss": "Click to dismiss toast message.",
+    "yes": "Yes"
+  },
+  "reset": {
+    "clickDeclineDiscard": "Click 'No' to continue the ongoing JS Slot game.",
+    "clickDiscard": "Click '{{buttonLabel}}' to discard the ongoing JS Slot game and start a new one.",
+    "description": "Allows the player to choose to start a new game or not.",
+    "doNotShowAgain": "Do not show this message again",
+    "resetGame": "You have an ongoing game. Do you want to discard it?",
+    "resetGameNoCredits": "You run out of credits. Start a new game?",
+    "title": "Reset Game"
+  },
+  "settings": {
+    "changeDarkMode": "Click to {{status}} dark mode.",
+    "changeLanguage": "Click to change game language.",
+    "changeMusicStatus": "Click to {{status}} game music.",
+    "changeSoundsStatus": "Click to {{status}} game sounds.",
+    "description": "Define user settings.",
+    "mute": "mute",
+    "english": "english",
+    "language": "Language",
+    "portuguese": "portuguese",
+    "title": "Settings",
+    "unmute": "unmute"
+  },
+  "slot": {
+    "credits": "Credits",
+    "creditsDescription": "You have {{credits}} credits.",
+    "freeSpins": "Free spins",
+    "freeSpinsDescription": "You have {{freeSpins}} free spins."
+  }
+}

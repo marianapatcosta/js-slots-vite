@@ -1,0 +1,20 @@
+.symbol {
+  width: calc($symbol-size);
+  height: calc($symbol-size);
+  display: flex;
+  svg {
+    width: 75%;
+    height: 75%;
+    margin: auto;
+    transition: filter 0.3s ease-in-out;
+    -webkit-transition: filter 0.3s ease-in-out;
+    -moz-transition: filter 0.3s ease-in-out;
+    -ms-transition: filter 0.3s ease-in-out;
+    -o-transition: filter 0.3s ease-in-out;
+  }
+
+  &--spinning svg {
+    filter: blur(0.25rem);
+    -webkit-filter: blur(0.25rem);
+  }
+}

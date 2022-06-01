@@ -1,0 +1,83 @@
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+
+  &:focus {
+    outline: 0.125rem solid $color-orange;
+  }
+
+  &:focus:not(:focus-visible) {
+    outline: none;
+  }
+}
+
+button,
+input,
+select {
+  font: inherit;
+  color: inherit;
+  border: none;
+  background: none;
+}
+
+button {
+  cursor: pointer;
+}
+
+.app {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--color-primary);
+  color: var(--color-font);
+  font-family: $font-primary;
+  font-size: $font-small;
+
+  main {
+    margin: 0 auto;
+    overflow-y: auto;
+    width: 100%;
+  }
+}
+
+.toast {
+  &-enter {
+    opacity: 0;
+  }
+
+  &-enter-active {
+    opacity: 1;
+    transition: opacity 0.3s ease-in;
+    -webkit-transition: opacity 0.3s ease-in;
+    -moz-transition: opacity 0.3s ease-in;
+    -ms-transition: opacity 0.3s ease-in;
+    -o-transition: opacity 0.3s ease-in;
+  }
+
+  &-exit {
+    opacity: 0;
+  }
+
+  &-exit-active {
+    opacity: 0;
+    transition: opacity 0.3s ease-out;
+    -webkit-transition: opacity 0.3s ease-out;
+    -moz-transition: opacity 0.3s ease-out;
+    -ms-transition: opacity 0.3s ease-out;
+    -o-transition: opacity 0.3s ease-out;
+  }
+}
+
+@media only screen and (min-width: $xs) {
+  .app {
+    font-size: $font-base;
+  }
+}
