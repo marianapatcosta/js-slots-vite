@@ -1,0 +1,38 @@
+.controllers {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.3rem 0.3rem 0.6rem;
+  margin-top: 0.5rem;
+  background: linear-gradient(to bottom, $color-blue, darken($color-blue, 20%));
+  border-radius: 0.5rem;
+  -webkit-border-radius: 0.5rem;
+  -moz-border-radius: 0.5rem;
+  -ms-border-radius: 0.5rem;
+  -o-border-radius: 0.5rem;
+  box-shadow: 0 0.125rem 0.2rem rgba($color-black, 0.5);
+
+  &__spin-button {
+    border-radius: 50%;
+    width: 3.5rem;
+    height: 3.5rem;
+    text-transform: uppercase;
+    position: relative;
+    font-size: $font-medium;
+    padding: 0.2rem 0.1rem;
+    min-width: initial;
+
+    &:before {
+      border-radius: 50% 50% 25% 25%;
+      -webkit-border-radius: 50% 50% 25% 25%;
+      -moz-border-radius: 50% 50% 25% 25%;
+      -ms-border-radius: 50% 50% 25% 25%;
+      -o-border-radius: 50% 50% 25% 25%;
+      top: -0.1rem;
+      left: 0rem;
+      height: 75%;
+      width: 95%;
+    }
+  }
+}

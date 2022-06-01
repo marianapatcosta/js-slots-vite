@@ -1,0 +1,47 @@
+.icon {
+  &__star:nth-child(1n) {
+    animation: sparkle 0.3s linear infinite alternate;
+  }
+
+  &__star:nth-child(3n) {
+    animation: sparkle 0.3s 0.6s linear infinite alternate;
+  }
+
+  &__boom {
+    animation: boom 1.25s 1.2s linear infinite alternate;
+  }
+
+  &__bolt {
+    animation: bolt 1.25s linear infinite alternate;
+    opacity: 1;
+  }
+}
+
+@keyframes sparkle {
+  100% {
+    fill: #b0e0e6;
+  }
+}
+
+@keyframes boom {
+  90% {
+    transform: scale(102%);
+  }
+  95% {
+    transform: scale(190%);
+  }
+  100% {
+    transform: scale(190%);
+  }
+}
+
+@keyframes bolt {
+  95% {
+    opacity: 1;
+    transform: scale(100%);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(105%);
+  }
+}

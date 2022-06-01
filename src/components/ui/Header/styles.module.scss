@@ -1,0 +1,18 @@
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  position: relative;
+  max-width: 47rem;
+  margin: 2rem auto 0;
+  padding: 0 1rem;
+  
+  h1 {
+    color: $color-pink;
+    font-family: $font-title;
+    font-size: $font-large;
+    text-align: center;
+    max-width: calc(100% - 2.5rem);
+  }
+}

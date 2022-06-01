@@ -1,0 +1,27 @@
+.reels {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat($reels-number, 1fr);
+  width: calc($reels-number * ($symbol-size + $reel-padding * 2) + $reels-padding * 2);
+  height: calc($rows-number * ($symbol-size + $reel-padding * 2));
+  border-radius: 0.5rem;
+  -webkit-border-radius: 0.5rem;
+  -moz-border-radius: 0.5rem;
+  -ms-border-radius: 0.5rem;
+  -o-border-radius: 0.5rem;
+  column-gap: 0.25rem;
+  background: linear-gradient(to bottom, $color-pink, $color-blue);
+  background-clip: padding-box;
+  padding: 0.625rem;
+
+  &:after {
+    position: absolute;
+    top: -4px;
+    bottom: -4px;
+    left: -4px;
+    right: -4px;
+    content: '';
+    z-index: -1;
+    border-radius: 16px;
+  }
+}
