@@ -1,15 +1,20 @@
 import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { State } from '@/store/types';
 import { ShareSvg } from '@/assets/svg';
 import { ToastType } from '@/types';
 import { ButtonIcon } from '@/components';
 import { JS_SLOTS_URL } from '@/constants';
 import { ToastContext } from '@/context/ToastContext';
+import { BubblePressSound } from '@/assets/sounds';
 import styles from './styles.module.scss';
 
 const Header: React.FC = () => {
   const [t] = useTranslation();
   const { addToast } = useContext(ToastContext);
+  const isSoundOn = useSelector((state: State) => state.settings.isSoundOn);
+  const bubblePressSound: HTMLAudioElement = new Audio(BubblePressSound);
 
   const share = async () => {
     if (typeof navigator !== 'undefined' && !navigator.share) {
@@ -37,6 +42,7 @@ const Header: React.FC = () => {
         icon={ShareSvg}
         aria-label={t('header.share')}
         title={t('header.share')}
+        buttonSound={isSoundOn ? bubblePressSound : null}
         onClick={share}
       />
     </header>

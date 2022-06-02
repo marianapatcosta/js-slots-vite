@@ -1,9 +1,12 @@
 import { HTMLAttributes, ReactNode, useRef } from 'react';
 import { createPortal } from 'react-dom';
+import { useSelector } from 'react-redux';
+import { State } from '@/store/types';
 import { CSSTransition } from 'react-transition-group';
 import { useTranslation } from 'react-i18next';
 import { ButtonIcon, SlotHeader } from '@/components';
 import { CloseSvg } from '@/assets/svg';
+import { BubblePressSound } from '@/assets/sounds';
 import styles from './styles.module.scss';
 
 interface ModalProps extends HTMLAttributes<HTMLDivElement> {
@@ -18,6 +21,8 @@ const Modal = ({ title, description, showModal, children, onCloseModal }: ModalP
   const element = document.getElementById('modal') as HTMLElement;
   const modalRef = useRef<HTMLDivElement>(null);
   const [t] = useTranslation();
+  const isSoundOn = useSelector((state: State) => state.settings.isSoundOn);
+  const bubblePressSound: HTMLAudioElement = new Audio(BubblePressSound);
 
   const ModalContent = () => (
     <div
@@ -32,7 +37,12 @@ const Modal = ({ title, description, showModal, children, onCloseModal }: ModalP
       <div className={styles['modal__content']} onClick={e => e.stopPropagation()}>
         <header className={styles['modal__header']}>
           <SlotHeader title={t(title)} />
-          <ButtonIcon icon={CloseSvg} aria-label={t('general.close')} onClick={onCloseModal} />
+          <ButtonIcon
+            icon={CloseSvg}
+            aria-label={t('general.close')}
+            buttonSound={isSoundOn ? bubblePressSound : null}
+            onClick={onCloseModal}
+          />
         </header>
         <main className={styles['modal__main']}>{children}</main>
       </div>
