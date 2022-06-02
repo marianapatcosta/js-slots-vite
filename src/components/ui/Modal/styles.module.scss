@@ -51,6 +51,7 @@
     top: 0;
     bottom: 0;
     height: max-content;
+    max-height: 80vh;
     left: 0;
     right: 0;
   }
@@ -90,6 +91,17 @@
           -o-transition: transform 0.2s ease-in-out;
         }
       }
+    }
+  }
+
+  &__main {
+    display: flex;
+    max-height: 30rem;
+    overflow: hidden;
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+    ::-webkit-scrollbar {
+      display: none;
     }
   }
 }

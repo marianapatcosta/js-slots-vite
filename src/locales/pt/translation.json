@@ -1,7 +1,14 @@
 {
   "about": {
-    "description": "Descreve o jogo JavaScript Slots.",
-    "title": "Sobre"
+    "description": "JS Slots Machine segue as regras dos jogos slot tradicionais, i.e, os símbolos do jogo rodam e depois o verifica-se se existem coombinações de 3 ou mais símbolos iguais numa das 9 linhas de pagamento existentes.",
+    "specialSymbols": "Símbolos especiais",
+    "explosive": "Explosivo",
+    "explosiveDescription": "A lado negativo do jogo: Uma linha de 3 ou mais símbolos Explosivos créditos.",
+    "scatter": "Scatter",
+    "scatterDescription": "Uma linha de 3 ou mais símbolos Scatter oferece 10 rodadas grátis.",
+    "wildcard": "WildCard",
+    "wildcardDescription": "O símbolo WildCard pode tomar a posição de qualquer outro símbolo do jogo, aumentando as chances de vitórias. No final de cada rodada, há a hipótese de ganhar wildcards extra.",
+    "title": "Info"
   },
   "controllers": {
     "autoSpin": "Auto Spin",
