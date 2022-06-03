@@ -37,6 +37,7 @@
     "close": "Clique para fechar o modal.",
     "disable": "disactivar",
     "enable": "activar",
+    "loading": "a carregar",
     "no": "Não",
     "ok": "OK",
     "toastDismiss": "Clique para fechar a mensagem.",
@@ -49,7 +50,7 @@
     "doNotShowAgain": "Não mostrar esta mensagem novamente",
     "resetGame": "Tem um jogo já iniciado. Pretende descartá-lo?",
     "resetGameNoCredits": "Ficou sem créditos. Pretence começar um novo jogo?",
-    "title": "Descartar Jogo"
+    "title": "Descartar"
   },
   "settings": {
     "changeDarkMode": "Clique para {{status}} o modo escuro.",

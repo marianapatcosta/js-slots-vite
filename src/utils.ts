@@ -1,4 +1,4 @@
-import type { Theme, Symbol } from '@/types';
+import type { Theme } from '@/types';
 
 export const setTheme = (theme: Theme): void =>
   document.documentElement.setAttribute('theme', theme);

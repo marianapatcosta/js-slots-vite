@@ -73,11 +73,11 @@ const SlotMachine = () => {
 
     // TODO FIND SLOT SCREEN
 
-    let result: SlotScreenResult = getScreenResult(SCREEN_7);
+    let result: SlotScreenResult = getScreenResult(SCREEN_7 as Symbol[][]);
 
     // TODO ANIMATE SYMBOLS TO CHANGE TO TS if wonBonus
     if (!result.winAmount && wonBonusWildCards()) {
-      const screenWithWildcards = getScreenWithBonusWildcards(SCREEN_6);
+      const screenWithWildcards = getScreenWithBonusWildcards(SCREEN_6 as Symbol[][]);
       result = getScreenResult(screenWithWildcards);
     }
 

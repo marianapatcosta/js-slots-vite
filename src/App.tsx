@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef } from 'react';
+import { useState, useMemo, useRef, useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { nanoid } from 'nanoid';
@@ -6,6 +6,7 @@ import {
   About,
   Footer,
   Header,
+  Loader,
   Modal,
   ResetGame,
   Settings,
@@ -18,6 +19,7 @@ import { ModalType, ToastData } from '@/types';
 import { ToastContext } from './context/ToastContext';
 import styles from './index.module.scss';
 import { TOAST_OFFSET } from './constants';
+import { LOADING_TIME } from './game-configs';
 
 export const MODALS_DATA = {
   [ModalType.ABOUT]: {
@@ -59,11 +61,15 @@ const App = () => {
     setToastData(prevData => prevData.filter((_, index) => index !== toastIndex));
   const toastListRef = useRef<HTMLDivElement>(null);
 
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const onLoadEnd = (): void => setIsLoading(false);
+
   return (
     <Provider store={store}>
       <ModalContext.Provider value={{ modalType, modalProps, openModal, closeModal }}>
         <ToastContext.Provider value={{ addToast }}>
-          <div className={styles.app}>
+          {isLoading && <Loader loadingTime={LOADING_TIME} onLoadEnd={onLoadEnd} />}
+          <div className={`${styles.app} ${isLoading ? styles['app--loading'] : ''}`}>
             <Header />
             <main>
               <SlotMachine />
