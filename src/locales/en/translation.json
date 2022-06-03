@@ -37,6 +37,7 @@
     "close": "Click to close the modal.",
     "disable": "disable",
     "enable": "enable",
+    "loading": "loading",
     "no": "No",
     "ok": "OK",
     "toastDismiss": "Click to dismiss toast message.",

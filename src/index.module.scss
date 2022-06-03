@@ -41,6 +41,10 @@ button {
   font-family: $font-primary;
   font-size: $font-small;
 
+  &--loading {
+    visibility: hidden;
+  }
+
   main {
     margin: 0 auto;
     overflow-y: auto;
