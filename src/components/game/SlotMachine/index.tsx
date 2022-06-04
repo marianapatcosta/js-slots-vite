@@ -73,7 +73,9 @@ const SlotMachine = () => {
 
     // TODO FIND SLOT SCREEN
 
-    let result: SlotScreenResult = getScreenResult(SCREEN_7 as Symbol[][]);
+    let result: SlotScreenResult = getScreenResult(SCREEN_1 as Symbol[][]);
+
+    console.log(777, result);
 
     // TODO ANIMATE SYMBOLS TO CHANGE TO TS if wonBonus
     if (!result.winAmount && wonBonusWildCards()) {

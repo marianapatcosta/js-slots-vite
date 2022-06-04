@@ -1,5 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { CSSTransition } from 'react-transition-group';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SlotHeader } from '@/components/ui/SlotHeader';
 import styles from './styles.module.scss';
@@ -13,7 +12,6 @@ const Loader: React.FC<LoaderProps> = ({ loadingTime, onLoadEnd }) => {
   const [t] = useTranslation();
   const [progressValue, setProgressValue] = useState<number>(0);
   const step = 100;
-  const loaderRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     let timerId: ReturnType<typeof setTimeout> | undefined;
@@ -29,31 +27,20 @@ const Loader: React.FC<LoaderProps> = ({ loadingTime, onLoadEnd }) => {
   }, [progressValue, loadingTime, onLoadEnd]);
 
   return (
-    <CSSTransition
-      timeout={200}
-      classNames={{
-        enter: styles['loader-enter'],
-        enterActive: styles['loader-enter-active'],
-        exit: styles['loader-exit'],
-        exitActive: styles['loader-exit-active'],
-      }}
-      nodeRef={loaderRef}
-    >
-      <div className={styles.loader}>
-        <SlotHeader title={t('global.loading')} additionalClass={styles['loader__slot']} />
-        <div className={styles['loader__progress-wrapper']}>
-          <div
-            className={styles['loader__progress']}
-            role="progressbar"
-            style={{ width: `${progressValue}%` }}
-            aria-label={t('global.loading')}
-            aria-valuemin={0}
-            aria-valuenow={progressValue}
-            aria-valuemax={100}
-          ></div>
-        </div>
+    <div className={styles.loader}>
+      <SlotHeader title={t('global.loading')} additionalClass={styles['loader__slot']} />
+      <div className={styles['loader__progress-wrapper']}>
+        <div
+          className={styles['loader__progress']}
+          role="progressbar"
+          style={{ width: `${progressValue}%` }}
+          aria-label={t('global.loading')}
+          aria-valuemin={0}
+          aria-valuenow={progressValue}
+          aria-valuemax={100}
+        ></div>
       </div>
-    </CSSTransition>
+    </div>
   );
 };
 

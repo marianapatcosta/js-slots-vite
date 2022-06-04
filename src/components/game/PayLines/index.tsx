@@ -1,72 +1,107 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useRef } from 'react';
 import { CSSTransition } from 'react-transition-group';
-import { ROW_NUMBER, SYMBOL_SIZE, PAY_LINES_METADATA } from '@/game-configs';
-import type { Position, PayLine, PayLineType } from '@/types';
+import { ROW_NUMBER, SYMBOL_SIZE, PAY_LINES_METADATA, REELS_NUMBER } from '@/game-configs';
+import type { Position, PayLine } from '@/types';
 import { remToPixel } from '@/utils';
-import styles from './styles.module.scss';
 import { useSelector } from 'react-redux';
 import { State } from '@/store/types';
-import { get } from 'https';
-
-const SQUARE_SIZE = 10; // in px
+import styles from './styles.module.scss';
 
 const PayLines: React.FC = () => {
   const showPayLines = useSelector((state: State) => state.slotMachine.showPayLines);
-  const winPayLines = useSelector((state: State) => state.slotMachine.winPayLines);
-  // TODO const losePayLines = useSelector((state: State) => state.slotMachine.losePayLines);
+  const winPayLines: PayLine[] = useSelector((state: State) => state.slotMachine.winPayLines);
+  const losePayLines = useSelector((state: State) => state.slotMachine.losePayLines);
+  const canvasWrapperRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   const getXCoord = (reel: number): number => {
-    return remToPixel(reel * SYMBOL_SIZE);
+    const GAP_BETWEEN_REELS = 0.25; // in rem
+    return remToPixel((reel + 1) * (SYMBOL_SIZE + GAP_BETWEEN_REELS) - SYMBOL_SIZE / 2);
   };
 
-  const getYCoord = (row: number): number => {
-    const factor = row === Math.floor(ROW_NUMBER) / 2 ? SYMBOL_SIZE : (SYMBOL_SIZE * 2) / 3;
-    return remToPixel(row * factor);
+  const getYCoord = useCallback((row: number, lineIndex: number): number => {
+    const offset: number = getYCoordOffset(lineIndex);
+    return remToPixel((row + 1) * SYMBOL_SIZE - SYMBOL_SIZE / 2 + offset);
+  }, []);
+
+  const getYCoordOffset = (lineIndex: number): number => {
+    let offset: number = 0;
+    // if row index > last row index (ROW_NUMBER - 1)
+    const isLineIndexHigherThanRowsNumber = lineIndex > ROW_NUMBER - 1;
+    if (isLineIndexHigherThanRowsNumber && lineIndex % 2 === 0) {
+      offset = SYMBOL_SIZE / 3;
+    }
+    if (isLineIndexHigherThanRowsNumber && lineIndex % 2 !== 0) {
+      offset = -SYMBOL_SIZE / 3;
+    }
+    return offset;
+  };
+
+  const getSquaresData = (): { top: number; color: string; lineNumber: number }[] => {
+    return Object.values(PAY_LINES_METADATA).map((data, index) => ({
+      top: getYCoord(data.positions[0].row, index),
+      color: data.color,
+      lineNumber: index + 1,
+    }));
   };
 
   const drawPayLine = useCallback(
     (context: CanvasRenderingContext2D, winningLine: PayLine, index: number): void => {
       context.beginPath();
-      context.lineWidth = 2;
+      context.lineWidth = 4;
       context.strokeStyle = winningLine.color;
       context.fillStyle = winningLine.color;
-      const { reel: initialXCoord, row: initialCoordY } = winningLine.positions[0];
-      context.fillRect(
-        getXCoord(initialXCoord) - SQUARE_SIZE,
-        getYCoord(initialCoordY) - SQUARE_SIZE / 2,
-        SQUARE_SIZE,
-        SQUARE_SIZE
-      );
-      context.fillText(String(index), 10, 10);
+      
+      // draw line from the container start border only if first reel is in the positions array
+      if (winningLine.positions[0].reel === 0) {
+        context.lineTo(0, getYCoord(winningLine.positions[0].row, index));
+      }
+      winningLine.positions.forEach(({ reel, row }: Position) => {
+        context.lineTo(getXCoord(reel), getYCoord(row, index));
+      });
 
-      winningLine.positions.forEach(({ reel, row }: Position) =>
-        context.lineTo(getXCoord(reel), getYCoord(row))
-      );
+      // draw line to the end of container only if last reel is in the positions array
+      if (winningLine.positions[winningLine.positions.length - 1].reel === REELS_NUMBER - 1) {
+        context.lineTo(
+          canvasRef.current?.width!,
+          getYCoord(winningLine.positions[winningLine.positions.length - 1].row, index)
+        );
+      }
+
       context.stroke();
     },
-    []
+    [getYCoord]
   );
 
   const getPayLinesMetadata = useCallback((): PayLine[] => {
+    if (winPayLines?.length && losePayLines?.length) {
+      return [...winPayLines, ...losePayLines];
+    }
+
     if (winPayLines?.length) {
       return winPayLines;
     }
 
+    if (losePayLines?.length) {
+      return winPayLines;
+    }
+
     return Object.values(PAY_LINES_METADATA);
-  }, [winPayLines]);
+  }, [winPayLines, losePayLines]);
 
   const drawCanvas = useCallback((): void => {
+    if (!canvasRef.current) {
+      return;
+    }
     const context = canvasRef.current?.getContext('2d') as CanvasRenderingContext2D;
+    // adjust canvas dimension to be accurate with pixel-based calculations
+    canvasRef.current.width = canvasRef.current?.offsetWidth;
+    canvasRef.current.height = canvasRef.current?.offsetHeight;
     const winningSequencesMetadata = getPayLinesMetadata();
     winningSequencesMetadata.forEach((sequenceMetadata, index) =>
       drawPayLine(context, sequenceMetadata, index)
     );
   }, [drawPayLine, getPayLinesMetadata]);
-
-/*   useEffect(() => {
-    drawCanvas();
-  }, [drawCanvas]); */
 
   return (
     <CSSTransition
@@ -80,9 +115,22 @@ const PayLines: React.FC = () => {
         exitActive: styles['pay-lines-exit-active'],
         exitDone: styles['pay-lines-exit-done'],
       }}
-      nodeRef={canvasRef}
+      nodeRef={canvasWrapperRef}
     >
-      <canvas className={styles['pay-lines']} ref={canvasRef}></canvas>
+      <div className={styles['pay-lines']} ref={canvasWrapperRef}>
+        <>
+          {getSquaresData().map(data => (
+            <div
+              style={{ top: `${data.top}px`, backgroundColor: data.color }}
+              className={styles['pay-lines__number']}
+              key={`line-${data.lineNumber}`}
+            >
+              {data.lineNumber}
+            </div>
+          ))}
+        </>
+        <canvas ref={canvasRef}></canvas>
+      </div>
     </CSSTransition>
   );
 };
