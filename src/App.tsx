@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef, useEffect } from 'react';
+import { useState, useMemo, useRef } from 'react';
 import { Provider } from 'react-redux';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { nanoid } from 'nanoid';
@@ -17,9 +17,9 @@ import { store } from '@/store';
 import { ModalContext } from '@/context/ModalContext';
 import { ModalType, ToastData } from '@/types';
 import { ToastContext } from './context/ToastContext';
-import styles from './index.module.scss';
 import { TOAST_OFFSET } from './constants';
 import { LOADING_TIME } from './game-configs';
+import styles from './index.module.scss';
 
 export const MODALS_DATA = {
   [ModalType.ABOUT]: {

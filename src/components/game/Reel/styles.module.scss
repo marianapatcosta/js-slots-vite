@@ -1,5 +1,4 @@
 .reel {
-  padding: $reel-padding;
   background-color: var(--color-secondary);
   border-radius: 0.5rem;
   -webkit-border-radius: 0.5rem;
@@ -7,7 +6,7 @@
   -ms-border-radius: 0.5rem;
   -o-border-radius: 0.5rem;
   overflow: hidden;
-  height: calc($symbol-size * $rows-number + $reel-padding * 2);
+  height: calc($symbol-size * $rows-number);
 
   &:first-child {
     transform: rotate(-1.5deg);

@@ -2,6 +2,8 @@
   width: calc($symbol-size);
   height: calc($symbol-size);
   display: flex;
+  margin: auto;
+
   svg {
     width: 75%;
     height: 75%;

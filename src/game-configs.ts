@@ -142,7 +142,7 @@ export const PAY_LINES_METADATA: Readonly<{ [key in PayLineType]: PayLine }> = {
   },
   [PayLineType.PL_3]: {
     type: PayLineType.PL_3,
-    color: Colors.GREY,
+    color: Colors.PURPLE,
     positions: [
       { reel: 0, row: 2 },
       { reel: 1, row: 2 },

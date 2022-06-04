@@ -91,7 +91,7 @@ export type SlotScreenResult = {
 export enum Colors {
   PINK = '#fe4495',
   BLUE = '#37a8ee',
-  GREEN = '#00800',
+  GREEN = '#008000',
   RED = '#b33030',
   YELLOW = '#f1c40f',
   ORANGE = '#fd891c',
