@@ -1,4 +1,4 @@
-import { HTMLAttributes, MouseEvent } from 'react';
+import { HTMLAttributes, MouseEvent, useCallback } from 'react';
 import styles from './styles.module.scss';
 
 interface ButtonIconProps extends HTMLAttributes<HTMLButtonElement> {
@@ -17,12 +17,13 @@ const ButtonIcon: React.FC<ButtonIconProps> = ({
   onClick,
   ...rest
 }) => {
-  const handleOnClick = (event: MouseEvent<HTMLButtonElement>) => {
+  const handleOnClick = useCallback((event: MouseEvent<HTMLButtonElement>) => {
     if (buttonSound) {
       buttonSound.play();
     }
     onClick(event);
-  };
+  }, [buttonSound, onClick]);
+
   return (
     <button
       className={`${styles.button} ${additionalClass ? additionalClass : ''}`}
