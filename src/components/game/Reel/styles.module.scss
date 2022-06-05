@@ -6,7 +6,8 @@
   -ms-border-radius: 0.5rem;
   -o-border-radius: 0.5rem;
   overflow: hidden;
-  height: calc($symbol-size * $rows-number);
+  height: calc($symbol-size-small * $rows-number);
+  box-shadow: 0.1rem 0.1rem 0.3rem rgba($color-black, 0.7);
 
   &:first-child {
     transform: rotate(-1.5deg);
@@ -32,11 +33,17 @@
     -o-transform: rotate(0.5deg);
   }
 
-  &:last-child {
+  &:nth-child(5) {
     transform: rotate(1.5deg);
     -webkit-transform: rotate(1.5deg);
     -moz-transform: rotate(1.5deg);
     -ms-transform: rotate(1.5deg);
     -o-transform: rotate(1.5deg);
+  }
+}
+
+@media only screen and (min-width: $xs) {
+  .reel {
+    height: calc($symbol-size * $rows-number);
   }
 }

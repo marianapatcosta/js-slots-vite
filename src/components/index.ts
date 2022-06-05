@@ -6,6 +6,7 @@ import { Controllers } from './game/Controllers';
 import { Footer } from './ui/Footer';
 import { Header } from './ui/Header';
 import { InputNumber } from './ui/InputNumber';
+import { Lights } from './game/Lights';
 import { Loader } from './game/Loader';
 import { Modal } from './ui/Modal';
 import { PayLines } from './game/PayLines';
@@ -29,6 +30,7 @@ export {
   Footer,
   Header,
   InputNumber,
+  Lights,
   Loader,
   Modal,
   PayLines,

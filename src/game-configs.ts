@@ -230,5 +230,6 @@ export const FREE_SPINS_NUMBER: Readonly<number> = 10;
 export const BONUS_WILDCARDS_NUMBER: Readonly<number> = 4;
 
 export const SYMBOL_SIZE: Readonly<number> = 5; // in rem
+export const SYMBOL_SIZE_SMALL: Readonly<number> = 4; // in rem
 
 export const LOADING_TIME: number = 3000; // in milliseconds

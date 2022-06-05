@@ -40,6 +40,7 @@ button {
   color: var(--color-font);
   font-family: $font-primary;
   font-size: $font-small;
+  position: relative;
 
   &--loading {
     visibility: hidden;
@@ -83,5 +84,21 @@ button {
 @media only screen and (min-width: $xs) {
   .app {
     font-size: $font-base;
+    
+    &:before {
+      content: '';
+      background-image: url('@/assets/images/background.svg');
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.2;
+      filter: var(--color-filter);
+      -webkit-filter: var(--color-filter);
+    }
   }
 }

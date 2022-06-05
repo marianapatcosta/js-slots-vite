@@ -5,6 +5,7 @@
   background-color: var(--color-secondary);
   padding: 1rem 0 0.7rem;
   box-shadow: 0 0.4rem 0.5rem 0.3rem rgba($color-black, 0.5);
+  z-index: 1;
 
   p {
     font-style: italic;

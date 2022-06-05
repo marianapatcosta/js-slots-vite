@@ -1,11 +1,13 @@
 import { useSelector } from 'react-redux';
-import { State } from '@/store/types';
-import styles from './styles.module.scss';
 import { useTranslation } from 'react-i18next';
+import { State } from '@/store/types';
+import { Lights } from '@/components'; 
+import styles from './styles.module.scss';
 
 const WinsDisplay: React.FC = () => {
   const credits = useSelector((state: State) => state.slotMachine.credits);
   const freeSpins = useSelector((state: State) => state.slotMachine.freeSpins);
+  const winPayLines = useSelector((state: State) => state.slotMachine.winPayLines);
   const [t] = useTranslation();
 
   return (
@@ -20,7 +22,10 @@ const WinsDisplay: React.FC = () => {
           <p className={styles['wins-display__display']}>{credits}</p>
         </div>
       </div>
-      <h1>JS SLOTS</h1>
+      <div>
+        <h2>JS SLOTS</h2>
+        <Lights blink={!!winPayLines.length} />
+      </div>
       <div
         title={t('slot.freeSpinsDescription', { freeSpins })}
         aria-label={t('slot.freeSpinsDescription', { freeSpins })}
