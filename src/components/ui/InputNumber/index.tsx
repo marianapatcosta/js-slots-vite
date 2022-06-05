@@ -28,14 +28,14 @@ const InputNumber: React.FC<InputNumberProps> = ({
   ...rest
 }) => {
   const [t] = useTranslation();
- 
+
   return (
     <div
       className={`${styles['input-number']} ${additionalClass ? additionalClass : ''} ${
         disabled ? styles['input-number--disabled'] : ''
       }`}
     >
-      {<label>{label}</label>}
+      {<label htmlFor="label">{label}</label>}
       <div className={styles['input-number__container']}>
         <Button
           label="-"
@@ -45,7 +45,15 @@ const InputNumber: React.FC<InputNumberProps> = ({
           disabled={value <= min}
           onClick={onDecreaseBet}
         />
-        <input type="number" disabled={disabled} value={value} min={min} max={max} {...rest} />
+        <input
+          id={label}
+          type="number"
+          disabled={disabled}
+          value={value}
+          min={min}
+          max={max}
+          {...rest}
+        />
         <Button
           label="+"
           aria-label={t('settings.changeSoundsStatus')}

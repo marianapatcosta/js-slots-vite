@@ -1,6 +1,6 @@
 .symbol {
-  width: calc($symbol-size);
-  height: calc($symbol-size);
+  width: calc($symbol-size-small);
+  height: calc($symbol-size-small);
   display: flex;
   margin: auto;
 
@@ -18,5 +18,12 @@
   &--spinning svg {
     filter: blur(0.25rem);
     -webkit-filter: blur(0.25rem);
+  }
+}
+
+@media only screen and (min-width: $xs) {
+  .symbol {
+    width: calc($symbol-size);
+    height: calc($symbol-size);
   }
 }

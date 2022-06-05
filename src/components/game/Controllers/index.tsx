@@ -86,22 +86,25 @@ const Controllers: React.FC<ControllersProps> = ({ isSpinning, onSpin }) => {
 
   return (
     <div className={styles.controllers}>
-      <ButtonIcon
-        icon={InfoSvg}
-        aria-label={t('controllers.checkInfo')}
-        title={t('controllers.checkInfo')}
-        buttonSound={isSoundOn ? bubblePressSound : null}
-        onClick={() => openModal(ModalType.ABOUT)}
-      />
-      <ButtonIcon
-        icon={SettingsSvg}
-        aria-label={t('controllers.checkSettings')}
-        title={t('controllers.checkSettings')}
-        buttonSound={isSoundOn ? bubblePressSound : null}
-        onClick={() => openModal(ModalType.SETTINGS)}
-      />
+      <div className={styles['controllers__settings']}>
+        <ButtonIcon
+          icon={InfoSvg}
+          aria-label={t('controllers.checkInfo')}
+          title={t('controllers.checkInfo')}
+          buttonSound={isSoundOn ? bubblePressSound : null}
+          onClick={() => openModal(ModalType.ABOUT)}
+        />
+        <ButtonIcon
+          icon={SettingsSvg}
+          aria-label={t('controllers.checkSettings')}
+          title={t('controllers.checkSettings')}
+          buttonSound={isSoundOn ? bubblePressSound : null}
+          onClick={() => openModal(ModalType.SETTINGS)}
+        />
+      </div>
       <InputNumber
         label={t('controllers.bet')}
+        additionalClass={styles['controllers__bet-input']}
         value={bet}
         min={1}
         max={credits}
@@ -113,7 +116,7 @@ const Controllers: React.FC<ControllersProps> = ({ isSpinning, onSpin }) => {
       />
       <Button
         label={t('controllers.spin')}
-        aria-label={t('controllers.changeBet')}
+        aria-label={t('controllers.spin')}
         disabled={isSpinning}
         additionalClass={styles['controllers__spin-button']}
         buttonSound={isSoundOn ? casinoPressSound : null}

@@ -5,10 +5,11 @@
   gap: 0.5rem;
   position: relative;
   max-width: 47rem;
-  margin: 2rem auto 0;
+  margin: 2rem auto 1rem;
   padding: 0 1rem;
-  
+
   h1 {
+    background-color: var(--color-primary);
     color: $color-pink;
     font-family: $font-title;
     font-size: $font-large;

@@ -22,26 +22,26 @@
   }
 
   &-enter-done {
+    transition: opacity 0.5s ease-in;
+    -webkit-transition: opacity 0.5s ease-in;
+    -moz-transition: opacity 0.5s ease-in;
+    -ms-transition: opacity 0.5s ease-in;
+    -o-transition: opacity 0.5s ease-in;
     opacity: 1;
-    transition: opacity 1s ease-in;
-    -webkit-transition: opacity 1s ease-in;
-    -moz-transition: opacity 1s ease-in;
-    -ms-transition: opacity 1s ease-in;
-    -o-transition: opacity 1s ease-in;
+}
+
+  &-exit {
+    opacity: 0;
   }
 
   &-exit-active {
-    opacity: 1;
-    transition: opacity 1s ease-out;
-    -webkit-transition: opacity 1s ease-out;
-    -moz-transition: opacity 1s ease-out;
-    -ms-transition: opacity 1s ease-out;
-    -o-transition: opacity 1s ease-out;
-  }
-
-  &-exit-done {
+    transition: opacity 0.5s ease-out;
+    -webkit-transition: opacity 0.5s ease-out;
+    -moz-transition: opacity 0.5s ease-out;
+    -ms-transition: opacity 0.5s ease-out;
+    -o-transition: opacity 0.5s ease-out;
     opacity: 0;
-  }
+}
 
   canvas {
     width: 100%;

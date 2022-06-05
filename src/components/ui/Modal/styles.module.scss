@@ -46,7 +46,7 @@
     -o-border-radius: 0.25rem;
     color: var(--color-font);
     font-family: $font-primary;
-    width: max-content;
+    width: 90%;
     position: absolute;
     top: 0;
     bottom: 0;
@@ -102,6 +102,14 @@
     scrollbar-width: none; /* Firefox */
     ::-webkit-scrollbar {
       display: none;
+    }
+  }
+}
+
+@media only screen and (min-width: $xs) {
+  .modal {
+    &__content {
+      width: max-content;
     }
   }
 }

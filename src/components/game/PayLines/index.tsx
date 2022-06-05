@@ -1,6 +1,12 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
-import { ROW_NUMBER, SYMBOL_SIZE, PAY_LINES_METADATA, REELS_NUMBER } from '@/game-configs';
+import {
+  ROW_NUMBER,
+  SYMBOL_SIZE,
+  SYMBOL_SIZE_SMALL,
+  PAY_LINES_METADATA,
+  REELS_NUMBER,
+} from '@/game-configs';
 import type { Position, PayLine } from '@/types';
 import { remToPixel } from '@/utils';
 import { useSelector } from 'react-redux';
@@ -13,29 +19,39 @@ const PayLines: React.FC = () => {
   const losePayLines = useSelector((state: State) => state.slotMachine.losePayLines);
   const canvasWrapperRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const [symbolSize, setSymbolSize] = useState(SYMBOL_SIZE);
 
-  const getXCoord = (reel: number): number => {
-    const GAP_BETWEEN_REELS = 0.25; // in rem
-    return remToPixel((reel + 1) * (SYMBOL_SIZE + GAP_BETWEEN_REELS) - SYMBOL_SIZE / 2);
-  };
+  const getYCoordOffset = useCallback(
+    (lineIndex: number): number => {
+      let offset: number = 0;
+      // if row index > last row index (ROW_NUMBER - 1)
+      const isLineIndexHigherThanRowsNumber = lineIndex > ROW_NUMBER - 1;
+      if (isLineIndexHigherThanRowsNumber && lineIndex % 2 === 0) {
+        offset = symbolSize / 3;
+      }
+      if (isLineIndexHigherThanRowsNumber && lineIndex % 2 !== 0) {
+        offset = -symbolSize / 3;
+      }
+      return offset;
+    },
+    [symbolSize]
+  );
 
-  const getYCoord = useCallback((row: number, lineIndex: number): number => {
-    const offset: number = getYCoordOffset(lineIndex);
-    return remToPixel((row + 1) * SYMBOL_SIZE - SYMBOL_SIZE / 2 + offset);
-  }, []);
+  const getXCoord = useCallback(
+    (reel: number): number => {
+      const GAP_BETWEEN_REELS = 0.25; // in rem
+      return remToPixel((reel + 1) * (symbolSize + GAP_BETWEEN_REELS) - symbolSize / 2);
+    },
+    [symbolSize]
+  );
 
-  const getYCoordOffset = (lineIndex: number): number => {
-    let offset: number = 0;
-    // if row index > last row index (ROW_NUMBER - 1)
-    const isLineIndexHigherThanRowsNumber = lineIndex > ROW_NUMBER - 1;
-    if (isLineIndexHigherThanRowsNumber && lineIndex % 2 === 0) {
-      offset = SYMBOL_SIZE / 3;
-    }
-    if (isLineIndexHigherThanRowsNumber && lineIndex % 2 !== 0) {
-      offset = -SYMBOL_SIZE / 3;
-    }
-    return offset;
-  };
+  const getYCoord = useCallback(
+    (row: number, lineIndex: number): number => {
+      const offset: number = getYCoordOffset(lineIndex);
+      return remToPixel((row + 1) * symbolSize - symbolSize / 2 + offset);
+    },
+    [symbolSize, getYCoordOffset]
+  );
 
   const getSquaresData = (): { top: number; color: string; lineNumber: number }[] => {
     return Object.values(PAY_LINES_METADATA).map((data, index) => ({
@@ -51,7 +67,7 @@ const PayLines: React.FC = () => {
       context.lineWidth = 4;
       context.strokeStyle = winningLine.color;
       context.fillStyle = winningLine.color;
-      
+
       // draw line from the container start border only if first reel is in the positions array
       if (winningLine.positions[0].reel === 0) {
         context.lineTo(0, getYCoord(winningLine.positions[0].row, index));
@@ -70,7 +86,7 @@ const PayLines: React.FC = () => {
 
       context.stroke();
     },
-    [getYCoord]
+    [getYCoord, getXCoord]
   );
 
   const getPayLinesMetadata = useCallback((): PayLine[] => {
@@ -103,6 +119,22 @@ const PayLines: React.FC = () => {
     );
   }, [drawPayLine, getPayLinesMetadata]);
 
+  const updateSymbolSize = useCallback(() => {
+    if (window.matchMedia('(max-width: 480px)').matches && symbolSize !== SYMBOL_SIZE_SMALL) {
+      setSymbolSize(SYMBOL_SIZE_SMALL);
+    }
+    if (window.matchMedia('(min-width: 480px)').matches && symbolSize !== SYMBOL_SIZE) {
+      setSymbolSize(SYMBOL_SIZE);
+    }
+  }, [symbolSize]);
+
+  useEffect(() => {
+    updateSymbolSize();
+    window.addEventListener('resize', updateSymbolSize);
+
+    return () => window.removeEventListener('resize', updateSymbolSize);
+  }, [updateSymbolSize]);
+
   return (
     <CSSTransition
       in={showPayLines}
@@ -112,8 +144,8 @@ const PayLines: React.FC = () => {
       classNames={{
         enterActive: styles['pay-lines-enter-active'],
         enterDone: styles['pay-lines-enter-done'],
+        exit: styles['pay-lines-exit'],
         exitActive: styles['pay-lines-exit-active'],
-        exitDone: styles['pay-lines-exit-done'],
       }}
       nodeRef={canvasWrapperRef}
     >

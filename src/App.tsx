@@ -16,9 +16,9 @@ import {
 import { store } from '@/store';
 import { ModalContext } from '@/context/ModalContext';
 import { ModalType, ToastData } from '@/types';
-import { ToastContext } from './context/ToastContext';
-import { TOAST_OFFSET } from './constants';
-import { LOADING_TIME } from './game-configs';
+import { ToastContext } from '@/context/ToastContext';
+import { TOAST_OFFSET } from '@/constants';
+import { LOADING_TIME } from '@/game-configs';
 import styles from './index.module.scss';
 
 export const MODALS_DATA = {
@@ -61,8 +61,8 @@ const App = () => {
     setToastData(prevData => prevData.filter((_, index) => index !== toastIndex));
   const toastListRef = useRef<HTMLDivElement>(null);
 
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const onLoadEnd = (): void => setIsLoading(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const onLoadEnd = (): void => setIsLoading(true);
 
   return (
     <Provider store={store}>
