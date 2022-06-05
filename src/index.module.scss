@@ -50,6 +50,7 @@ button {
     margin: 0 auto;
     overflow-y: auto;
     width: 100%;
+    z-index: 1;
   }
 }
 
@@ -84,7 +85,7 @@ button {
 @media only screen and (min-width: $xs) {
   .app {
     font-size: $font-base;
-    
+
     &:before {
       content: '';
       background-image: url('@/assets/images/background.svg');

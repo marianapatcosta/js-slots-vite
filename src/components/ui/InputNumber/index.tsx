@@ -35,7 +35,7 @@ const InputNumber: React.FC<InputNumberProps> = ({
         disabled ? styles['input-number--disabled'] : ''
       }`}
     >
-      {<label htmlFor="label">{label}</label>}
+      {!!label && <label htmlFor={label}>{label}</label>}
       <div className={styles['input-number__container']}>
         <Button
           label="-"

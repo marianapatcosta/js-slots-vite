@@ -1,6 +1,7 @@
-import { useState, useMemo, useRef } from 'react';
+import { useState, useMemo, useRef, useEffect, useCallback } from 'react';
 import { Provider } from 'react-redux';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import { useRegisterSW } from 'virtual:pwa-register/react';
 import { nanoid } from 'nanoid';
 import {
   About,
@@ -15,13 +16,14 @@ import {
 } from '@/components';
 import { store } from '@/store';
 import { ModalContext } from '@/context/ModalContext';
-import { ModalType, ToastData } from '@/types';
+import { ModalType, ToastData, ToastType } from '@/types';
 import { ToastContext } from '@/context/ToastContext';
 import { TOAST_OFFSET } from '@/constants';
 import { LOADING_TIME } from '@/game-configs';
 import styles from './index.module.scss';
+import { useTranslation } from 'react-i18next';
 
-export const MODALS_DATA = {
+const MODALS_DATA = {
   [ModalType.ABOUT]: {
     title: 'about.title',
     description: 'about.description',
@@ -40,6 +42,7 @@ export const MODALS_DATA = {
 };
 
 const App = () => {
+  const [t] = useTranslation();
   const [modalType, setModalType] = useState<ModalType | null>(null);
   const [modalProps, setModalProps] = useState<{ hasNoCredits: boolean } | null>(null);
   const modalData = useMemo(() => (modalType ? MODALS_DATA[modalType] : null), [modalType]);
@@ -61,8 +64,37 @@ const App = () => {
     setToastData(prevData => prevData.filter((_, index) => index !== toastIndex));
   const toastListRef = useRef<HTMLDivElement>(null);
 
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const onLoadEnd = (): void => setIsLoading(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const onLoadEnd = (): void => setIsLoading(false);
+
+  const intervalMS = 60 * 60 * 1000;
+  useRegisterSW({
+    onRegistered(r: ServiceWorkerRegistration | undefined) {
+      r &&
+        setInterval(() => {
+          r.update();
+        }, intervalMS);
+    },
+  });
+
+  const trackOfflineStatus = useCallback(
+    (event: Event) => {
+      if (event.type === 'offline') {
+        addToast({ type: ToastType.WARNING, message: t('global.offline') });
+      }
+    },
+    [t]
+  );
+
+  useEffect(() => {
+    window.addEventListener('online', trackOfflineStatus);
+    window.addEventListener('offline', trackOfflineStatus);
+
+    return () => {
+      window.removeEventListener('online', trackOfflineStatus);
+      window.removeEventListener('offline', trackOfflineStatus);
+    };
+  }, [trackOfflineStatus]);
 
   return (
     <Provider store={store}>
@@ -105,7 +137,7 @@ const App = () => {
                   style={{ top: `${TOAST_OFFSET * index + 2}rem` }}
                   type={data.type}
                   onToastDismiss={() => removeToast(index)}
-                  autoDismissable={false}
+                  autoDismissable={true}
                 />
               </CSSTransition>
             ))}

@@ -39,6 +39,7 @@
     "enable": "activar",
     "loading": "a carregar",
     "no": "Não",
+    "offline": "Está offline!",
     "ok": "OK",
     "toastDismiss": "Clique para fechar a mensagem.",
     "yes": "Sim"
