@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ESNext",
     "useDefineForClassFields": true,
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "lib": ["DOM", "DOM.Iterable", "ESNext", "WebWorker"],
     "allowJs": false,
     "skipLibCheck": true,
     "esModuleInterop": false,
@@ -20,6 +20,12 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src", "src/assets/svg/SlotMachineSvg.tsx"],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "node_modules/vite-plugin-pwa/vue.d.ts"
+  ],
+  "exclude": ["dist", "node_modules", "**/*.worker.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

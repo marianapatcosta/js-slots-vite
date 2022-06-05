@@ -39,6 +39,7 @@
     "enable": "enable",
     "loading": "loading",
     "no": "No",
+    "offline": "You are offline!",
     "ok": "OK",
     "toastDismiss": "Click to dismiss toast message.",
     "yes": "Yes"
