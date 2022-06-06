@@ -1,12 +1,16 @@
 import styles from './styles.module.scss';
 
-const BabylonSvg = () => {
+interface SymbolSvgProps {
+  animate?: boolean;
+}
+
+const BabylonSvg: React.FC<SymbolSvgProps> = ({ animate }) => {
   return (
     <svg
       aria-hidden={true}
       width="50"
       height="50"
-      className={styles.icon}
+      className={animate ? styles.icon : ''}
       viewBox="50 50 300 280"
       xmlns="http://www.w3.org/2000/svg"
     >

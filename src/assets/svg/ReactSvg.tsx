@@ -1,15 +1,20 @@
-const ReactSvg = () => {
+interface SymbolSvgProps {
+  animate?: boolean;
+}
+
+const ReactSvg: React.FC<SymbolSvgProps> = ({ animate = false }) => {
   return (
-      <svg
-        aria-hidden={true}
-        width="50"
-        height="50"
-        viewBox="-11.5 -10.232 23 20.463"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <circle r="2.05" fill="#61dafb" />
-        <g fill="none" stroke="#61dafb" >
-          <ellipse rx="11" ry="4.2" id="e1">
+    <svg
+      aria-hidden={true}
+      width="50"
+      height="50"
+      viewBox="-11.5 -10.232 23 20.463"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <circle r="2.05" fill="#61dafb" />
+      <g fill="none" stroke="#61dafb">
+        <ellipse rx="11" ry="4.2" id="e1">
+          {animate && (
             <animateTransform
               attributeName="transform"
               type="rotate"
@@ -18,8 +23,10 @@ const ReactSvg = () => {
               dur="10s"
               repeatCount="indefinite"
             />
-          </ellipse>
-          <ellipse transform="rotate(60)" rx="11" ry="4.2">
+          )}
+        </ellipse>
+        <ellipse transform="rotate(60)" rx="11" ry="4.2">
+          {animate && (
             <animateTransform
               attributeName="transform"
               type="rotate"
@@ -28,8 +35,10 @@ const ReactSvg = () => {
               dur="10s"
               repeatCount="indefinite"
             />
-          </ellipse>
-          <ellipse rx="11" ry="4.2" transform="rotate(120)">
+          )}
+        </ellipse>
+        <ellipse rx="11" ry="4.2" transform="rotate(120)">
+          {animate && (
             <animateTransform
               attributeName="transform"
               type="rotate"
@@ -38,9 +47,10 @@ const ReactSvg = () => {
               dur="10s"
               repeatCount="indefinite"
             />
-          </ellipse>
-        </g>
-      </svg>
+          )}
+        </ellipse>
+      </g>
+    </svg>
   );
 };
 

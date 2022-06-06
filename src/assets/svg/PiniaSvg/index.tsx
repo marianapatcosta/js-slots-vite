@@ -1,6 +1,9 @@
 import styles from './styles.module.scss';
+interface SymbolSvgProps {
+  animate?: boolean;
+}
 
-const PiniaSvg = () => {
+const PiniaSvg: React.FC<SymbolSvgProps> = ({ animate }) => {
   return (
     <svg
       aria-hidden={true}
@@ -8,7 +11,7 @@ const PiniaSvg = () => {
       width="50"
       height="50"
       xmlns="http://www.w3.org/2000/svg"
-      className={styles.icon}
+      className={animate ? styles.icon : ''}
     >
       <linearGradient id="a">
         <stop stopColor="#52ce63" offset="0" />
@@ -33,7 +36,7 @@ const PiniaSvg = () => {
       </linearGradient>
       <g transform="translate(-34 -24)" fill="none" fillRule="evenodd">
         <g
-          className={styles['icon__leaves']}
+          className={animate ? styles['icon__leaves'] : ''}
           transform="matrix(.99255 .12187 -.12187 .99255 33.922 .97669)"
         >
           <path
@@ -76,17 +79,17 @@ const PiniaSvg = () => {
           <path
             d="m154.5 3c-5.9375 0-11.313 2.4063-15.204 6.2968-3.8909 3.8906-6.2975 9.2655-6.2975 15.203 0 5.9377 2.4065 11.313 6.2973 15.203 3.8909 3.8908 9.2662 6.2971 15.204 6.2971 5.9371 0 11.312-2.4064 15.202-6.2972 3.8903-3.8907 6.2965-9.2657 6.2965-15.203 0-5.9372-2.4062-11.312-6.2967-15.203-3.8905-3.8906-9.2652-6.2969-15.202-6.2969z"
             fill="#000"
-            className={styles['icon__eye-ball']}
+            className={animate ? styles['icon__eye-ball'] : ''}
           />
           <path
             d="m154 21c0-3.8655 3.1354-7 6.9994-7 3.8664 0 7.0006 3.1345 7.0006 7s-3.1342 7-7.0006 7c-3.8641-0.0011735-6.9994-3.1345-6.9994-7z"
             fill="#fff"
-            className={styles['icon__eye-ball']}
+            className={animate ? styles['icon__eye-ball'] : ''}
           />
           <path
             d="m24.5 13c-5.9375 0-11.312 2.4063-15.203 6.2967-3.8907 3.8906-6.297 9.2655-6.297 15.203 0 5.9378 2.4063 11.313 6.2968 15.204 3.8906 3.8907 9.2656 6.297 15.203 6.297 5.9371 0 11.312-2.4064 15.203-6.2973 3.8905-3.8907 6.297-9.2656 6.297-15.203 0-5.9371-2.4065-11.312-6.2972-15.202-3.8908-3.8906-9.2658-6.297-15.203-6.297z"
             fill="#000"
-            className={styles['icon__eye-ball']}
+            className={animate ? styles['icon__eye-ball'] : ''}
           />
           <g fill="#fff">
             <path
@@ -94,17 +97,17 @@ const PiniaSvg = () => {
               fillRule="nonzero"
               stroke="#fff"
               strokeWidth="3"
-              className={styles['icon__eye']}
+              className={animate ? styles['icon__eye'] : ''}
             />
             <path
               d="m6 34.499c0 10.219 8.2818 18.501 18.5 18.501 10.217 0 18.5-8.282 18.5-18.501 0-10.217-8.2829-18.499-18.5-18.499-10.218 0-18.5 8.282-18.5 18.499zm-6 0c0-13.531 10.968-24.499 24.5-24.499 13.531 0 24.5 10.968 24.5 24.499 0 13.532-10.969 24.501-24.5 24.501-13.532 0-24.5-10.968-24.5-24.501z"
               fillRule="nonzero"
               stroke="#fff"
               strokeWidth="3"
-              className={styles['icon__eye']}
+              className={animate ? styles['icon__eye'] : ''}
             />
             <path
-              className={styles['icon__eye-ball']}
+              className={animate ? styles['icon__eye-ball'] : ''}
               d="m24 31c0-3.8655 3.1345-7 7-7s7 3.1345 7 7-3.1345 7-7 7-7-3.1345-7-7z"
             />
           </g>

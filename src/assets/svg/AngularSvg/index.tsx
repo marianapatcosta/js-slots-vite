@@ -1,12 +1,16 @@
 import styles from './styles.module.scss';
 
-const AngularSvg = () => {
+interface SymbolSvgProps {
+  animate?: boolean;
+}
+
+const AngularSvg: React.FC<SymbolSvgProps> = ({ animate }) => {
   return (
     <svg
       aria-hidden={true}
       width="50"
       height="50"
-      className={styles.icon}
+      className={animate ? styles.icon : ''}
       viewBox="0 0 32 32"
       xmlns="http://www.w3.org/2000/svg"
     >
