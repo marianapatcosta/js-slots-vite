@@ -24,7 +24,7 @@ const WinsDisplay: React.FC = () => {
       </div>
       <div>
         <h2>JS SLOTS</h2>
-        <Lights blink={!!winPayLines.length} />
+        <Lights blink={!!winPayLines?.length} />
       </div>
       <div
         title={t('slot.freeSpinsDescription', { freeSpins })}

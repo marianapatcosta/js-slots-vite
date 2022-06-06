@@ -24,6 +24,7 @@ import {
 import { ModalContext } from '@/context/ModalContext';
 import { SlotWheelSound, ThemeSound, WinSound } from '@/assets/sounds';
 import styles from './styles.module.scss';
+import { deepClone, getRandomNumber } from '@/utils';
 
 const SlotMachine = () => {
   const [t] = useTranslation();
@@ -36,12 +37,22 @@ const SlotMachine = () => {
   const isAutoSpinOn = useSelector((state: State) => state.slotMachine.isAutoSpinOn);
   const hasOngoingGame = useSelector((state: State) => state.slotMachine.hasOngoingGame);
   const resetGameOnMount = useSelector((state: State) => state.slotMachine.resetGameOnMount);
+  const [displayedReels, setDisplayedReels] = useState<Symbol[][]>([]);
+
   const dispatch = useDispatch();
   const { openModal } = useContext(ModalContext);
 
   const themeMusic: HTMLAudioElement = useMemo(() => new Audio(ThemeSound), []);
   const slotWheelSound: HTMLAudioElement = new Audio(SlotWheelSound);
   const winSound: HTMLAudioElement = new Audio(WinSound);
+
+  /*   const shuffleWorker: Worker = useMemo(
+    () =>
+      new Worker(new URL('../../../workers/shuffle-worker.ts', import.meta.url), {
+        type: 'module',
+      }),
+    []
+  ); */
 
   const setGameConfigs = useCallback(() => {
     if ((hasOngoingGame && resetGameOnMount === null) || !credits) {
@@ -65,23 +76,38 @@ const SlotMachine = () => {
 
   const onSpin = useCallback(() => {
     setIsSpinning(true);
-    if (isSoundOn) {
+    console.log(4235423);
+    /* if (isSoundOn) {
       slotWheelSound.play();
       slotWheelSound.loop = true;
-    }
+    } */
+    const slotScreen: Symbol[][] = reels.map(reel => {
+      const randomIndex = getRandomNumber(0, reel.length - 3);
+      return reel.slice(randomIndex, randomIndex + 3);
+    });
+    setReels(prevReels => prevReels.map((reel, index) => [...reel, ...slotScreen[index]]));
+
     // TODO START ANIMATE // setTimer to animate check, when stop, ASSET WIN}, []);
+    let timerId: ReturnType<typeof setTimeout> | undefined;
 
-    // TODO FIND SLOT SCREEN
+    const start = Date.now();
+    timerId = setTimeout(function animate() {
+      if (Date.now() - start > 5000) {
+        clearTimeout(timerId);
+        return;
+      }
 
-    let result: SlotScreenResult = getScreenResult(SCREEN_1 as Symbol[][]);
+      setReels(prevReels => prevReels.map(([firstReel, ...rest]) => [...rest, firstReel]));
+      timerId = setTimeout(animate, 100);
+    }, 100);
 
-    console.log(777, result);
+    let result: SlotScreenResult = getScreenResult(slotScreen);
 
     // TODO ANIMATE SYMBOLS TO CHANGE TO TS if wonBonus
-    if (!result.winAmount && wonBonusWildCards()) {
+    /*    if (!result.winAmount && wonBonusWildCards()) {
       const screenWithWildcards = getScreenWithBonusWildcards(SCREEN_6 as Symbol[][]);
       result = getScreenResult(screenWithWildcards);
-    }
+    } */
 
     // TODO On SPIn end dispatch()
     /* 
@@ -100,12 +126,16 @@ const SlotMachine = () => {
     // TODO CHECK credits balance: if 0
     openModal(ModalType.RESET, {hasNoCredits: true});
     */
-  }, []);
+  }, [reels, dispatch, displayedReels]);
 
   useEffect(() => {
     const shuffledReels = getShuffledReels();
     setReels(shuffledReels);
     setGameConfigs();
+    /* shuffleWorker.onmessage = event => {
+      const shuffledReels = event.data.data;
+      shuffleWorker.terminate();
+    }; */
 
     return () => {
       dispatch({ type: GAME_LEFT });
@@ -128,7 +158,7 @@ const SlotMachine = () => {
   return (
     <div className={styles['slot-machine']}>
       <WinsDisplay />
-      <Reels reels={reels} />
+      <Reels reels={reels.map(reel => reel.slice(0, 4))} />
       <Controllers isSpinning={isSpinning} onSpin={onSpin} />
     </div>
   );
