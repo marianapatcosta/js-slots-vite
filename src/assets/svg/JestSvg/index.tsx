@@ -1,12 +1,16 @@
 import styles from './styles.module.scss';
 
-const JestSvg = () => {
+interface SymbolSvgProps {
+  animate?: boolean;
+}
+
+const JestSvg: React.FC<SymbolSvgProps> = ({ animate }) => {
   return (
     <svg
       aria-hidden={true}
       width="50"
       height="50"
-      className={styles.icon}
+      className={animate ? styles.icon : ''}
       viewBox="0 0 256 283"
       xmlns="http://www.w3.org/2000/svg"
     >

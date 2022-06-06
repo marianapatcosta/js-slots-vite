@@ -1,12 +1,15 @@
 import styles from './styles.module.scss';
+interface SymbolSvgProps {
+  animate?: boolean;
+}
 
-const VueSvg = () => {
+const VueSvg: React.FC<SymbolSvgProps> = ({ animate = false }) => {
   return (
     <svg
       aria-hidden={true}
       width="50"
       height="50"
-      className={styles.icon}
+      className={animate ? styles.icon : ''}
       viewBox="0 0 32 32"
       xmlns="http://www.w3.org/2000/svg"
     >
