@@ -11,6 +11,7 @@ import {
   RESET_MODAL_DISMISSED,
   BET_UPDATED,
   GAME_LEFT,
+  NEW_SPIN_PREPARED,
 } from '../action-types';
 
 export interface State {
@@ -49,6 +50,7 @@ export type Action =
   | { type: typeof SHOW_PAY_LINES_STATE_CHANGED; payload: boolean }
   | { type: typeof GAME_RESET }
   | { type: typeof GAME_LEFT }
+  | { type: typeof NEW_SPIN_PREPARED }
   | { type: typeof RESET_MODAL_DISMISSED; payload: boolean };
 
 export const reducer = (state = initialState, action: Action): State => {
@@ -93,6 +95,7 @@ export const reducer = (state = initialState, action: Action): State => {
         freeSpins: state.freeSpins + freeSpins,
         winPayLines,
         losePayLines,
+        showPayLines: !!winPayLines.length || !!losePayLines.length,
       };
     case AUTO_SPIN_STATE_CHANGED:
       return {
@@ -104,6 +107,13 @@ export const reducer = (state = initialState, action: Action): State => {
         ...state,
         showPayLines: action.payload,
       };
+    case NEW_SPIN_PREPARED:
+      return {
+        ...state,
+        showPayLines: false,
+        winPayLines: [],
+        losePayLines: [],
+      };
     case GAME_LEFT:
       return {
         ...state,
@@ -114,6 +124,7 @@ export const reducer = (state = initialState, action: Action): State => {
     case GAME_RESET:
       return {
         ...initialState,
+        resetGameOnMount: state.resetGameOnMount,
       };
     case RESET_MODAL_DISMISSED:
       return {

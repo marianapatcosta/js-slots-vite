@@ -26,13 +26,14 @@
   &__adapter {
     position: absolute;
     background-color: $color-blue;
-    right: -0.4rem;
+    right: -0.5rem;
     top: 0;
     bottom: 0;
     margin: auto 0;
     width: 0.6rem;
     height: 2.3rem;
     border-radius: 0.25rem;
+    box-shadow: 0 0.05rem 0.15rem rgba($color-black, 0.7);
   }
 
   &__handler {
@@ -48,11 +49,12 @@
     -moz-transform: rotate(30deg);
     -ms-transform: rotate(30deg);
     -o-transform: rotate(30deg);
+    box-shadow: 0 0.05rem 0.15rem rgba($color-black, 0.7);
 
     &:before {
       content: '';
       position: absolute;
-      width: 1rem;
+      width: 0.8rem;
       height: 0.36rem;
       bottom: 0;
       right: 0;

@@ -9,6 +9,7 @@
     "lint": "eslint --max-warnings=0 src"
   },
   "dependencies": {
+    "gsap": "^3.10.4",
     "i18next": "^21.8.0",
     "nanoid": "^3.3.4",
     "react": "^18.0.0",
