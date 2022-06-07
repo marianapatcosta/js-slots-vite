@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef, RefAttributes } from 'react';
 import { nanoid } from 'nanoid';
 import { PayLines, Reel } from '@/components';
 import type { Symbol } from '@/types';
@@ -8,15 +8,17 @@ interface ReelsProps {
   reels: Symbol[][];
 }
 
-const Reels: React.FC<ReelsProps> = ({ reels }) => {
-  return (
-    <div className={styles.reels}>
-      {reels.map(reel => (
-        <Reel reel={reel} key={`reel-${nanoid()}`} />
-      ))}
-      <PayLines />
-    </div>
-  );
-};
+const Reels: React.FunctionComponent<ReelsProps & RefAttributes<HTMLDivElement>> = forwardRef(
+  ({ reels }, ref) => {
+    return (
+      <div className={styles.reels} ref={ref}>
+        {reels.map(reel => (
+          <Reel reel={reel} key={`reel-${nanoid()}`} />
+        ))}
+        <PayLines />
+      </div>
+    );
+  }
+);
 
 export { Reels };
