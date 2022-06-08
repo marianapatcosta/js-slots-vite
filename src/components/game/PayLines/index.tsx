@@ -22,15 +22,15 @@ const PayLines: React.FC = () => {
   const [symbolSize, setSymbolSize] = useState(SYMBOL_SIZE);
 
   const getYCoordOffset = useCallback(
-    (lineIndex: number): number => {
+    (lineNumber: number): number => {
       let offset: number = 0;
-      // if row index > last row index (ROW_NUMBER - 1)
-      const isLineIndexHigherThanRowsNumber = lineIndex > ROW_NUMBER - 1;
-      if (isLineIndexHigherThanRowsNumber && lineIndex % 2 === 0) {
-        offset = symbolSize / 3;
-      }
-      if (isLineIndexHigherThanRowsNumber && lineIndex % 2 !== 0) {
+      // if row number > last row  (ROW_NUMBER)
+      const isLineNumberHigherThanRowsNumber = lineNumber > ROW_NUMBER;
+      if (isLineNumberHigherThanRowsNumber && lineNumber % 2 === 0) {
         offset = -symbolSize / 3;
+      }
+      if (isLineNumberHigherThanRowsNumber && lineNumber % 2 !== 0) {
+        offset = symbolSize / 3;
       }
       return offset;
     },
@@ -46,23 +46,26 @@ const PayLines: React.FC = () => {
   );
 
   const getYCoord = useCallback(
-    (row: number, lineIndex: number): number => {
-      const offset: number = getYCoordOffset(lineIndex);
+    (row: number, lineNumber: number): number => {
+      const offset: number = getYCoordOffset(lineNumber);
       return remToPixel((row + 1) * symbolSize - symbolSize / 2 + offset);
     },
     [symbolSize, getYCoordOffset]
   );
 
   const getSquaresData = (): { top: number; color: string; lineNumber: number }[] => {
-    return Object.values(PAY_LINES_METADATA).map((data, index) => ({
-      top: getYCoord(data.positions[0].row, index),
-      color: data.color,
-      lineNumber: index + 1,
-    }));
+    return Object.values(PAY_LINES_METADATA).map((data: PayLine, index: number) => {
+      const lineNumber: number = parseInt(data.type.split('payLine')[1]);
+      return {
+        top: getYCoord(data.positions[0].row, lineNumber),
+        color: data.color,
+        lineNumber: index + 1,
+      };
+    });
   };
 
   const drawPayLine = useCallback(
-    (context: CanvasRenderingContext2D, winningLine: PayLine, index: number): void => {
+    (context: CanvasRenderingContext2D, winningLine: PayLine, lineNumber: number): void => {
       context.beginPath();
       context.lineWidth = 4;
       context.strokeStyle = winningLine.color;
@@ -70,17 +73,17 @@ const PayLines: React.FC = () => {
 
       // draw line from the container start border only if first reel is in the positions array
       if (winningLine.positions[0].reel === 0) {
-        context.lineTo(0, getYCoord(winningLine.positions[0].row, index));
+        context.lineTo(0, getYCoord(winningLine.positions[0].row, lineNumber));
       }
       winningLine.positions.forEach(({ reel, row }: Position) => {
-        context.lineTo(getXCoord(reel), getYCoord(row, index));
+        context.lineTo(getXCoord(reel), getYCoord(row, lineNumber));
       });
 
       // draw line to the end of container only if last reel is in the positions array
       if (winningLine.positions[winningLine.positions.length - 1].reel === REELS_NUMBER - 1) {
         context.lineTo(
           canvasRef.current?.width!,
-          getYCoord(winningLine.positions[winningLine.positions.length - 1].row, index)
+          getYCoord(winningLine.positions[winningLine.positions.length - 1].row, lineNumber)
         );
       }
 
@@ -113,10 +116,11 @@ const PayLines: React.FC = () => {
     // adjust canvas dimension to be accurate with pixel-based calculations
     canvasRef.current.width = canvasRef.current?.offsetWidth;
     canvasRef.current.height = canvasRef.current?.offsetHeight;
-    const winningSequencesMetadata = getPayLinesMetadata();
-    winningSequencesMetadata.forEach((sequenceMetadata, index) =>
-      drawPayLine(context, sequenceMetadata, index)
-    );
+    const winningSequencesMetadata: PayLine[] = getPayLinesMetadata();
+    winningSequencesMetadata.forEach((sequenceMetadata: PayLine) => {
+      const lineNumber: number = parseInt(sequenceMetadata.type.split('payLine')[1]);
+      drawPayLine(context, sequenceMetadata, lineNumber);
+    });
   }, [drawPayLine, getPayLinesMetadata]);
 
   const updateSymbolSize = useCallback(() => {
