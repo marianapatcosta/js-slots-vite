@@ -75,15 +75,6 @@ const Controllers: React.FC<ControllersProps> = ({ isSpinning, onSpin }) => {
     [credits, dispatch]
   );
 
-  const handleSpin = useCallback((): void => {
-    if (bet > credits) {
-      return;
-    }
-    const action = { type: SPAN };
-    dispatch(action);
-    onSpin();
-  }, [bet, credits, dispatch, onSpin]);
-
   return (
     <div className={styles.controllers}>
       <div className={styles['controllers__settings']}>
@@ -120,7 +111,7 @@ const Controllers: React.FC<ControllersProps> = ({ isSpinning, onSpin }) => {
         disabled={isSpinning}
         additionalClass={styles['controllers__spin-button']}
         buttonSound={isSoundOn ? casinoPressSound : null}
-        onClick={handleSpin}
+        onClick={onSpin}
       />
       <Button
         label={t('controllers.autoSpin')}
