@@ -5,19 +5,14 @@ import styles from './styles.module.scss';
 
 interface SymbolProps {
   symbol: SymbolType;
-  initialTopPosition: number;
 }
 
-const Symbol = ({ symbol, initialTopPosition }: SymbolProps) => {
+const Symbol = ({ symbol }: SymbolProps) => {
   const isSpinning = useSelector((state: State) => state.slotMachine.isSpinning);
   const SymbolIcon = symbol.icon;
 
   return (
-    <div
-      id="symbol"
-      className={`${styles.symbol} ${isSpinning ? styles['symbol--spinning'] : ''}`}
-      style={{ top: initialTopPosition }}
-    >
+    <div id="symbol" className={`${styles.symbol} ${isSpinning ? styles['symbol--spinning'] : ''}`}>
       <SymbolIcon />
     </div>
   );

@@ -3,13 +3,9 @@
   height: calc($symbol-size-small);
   display: flex;
   margin: auto;
+  will-change: transform;
   position: absolute;
-  transition: top 1s linear;
-  -webkit-transition: top 1s linear;
-  -moz-transition: top 1s linear;
-  -ms-transition: top 1s linear;
-  -o-transition: top 1s linear;
-  
+
   svg {
     width: 75%;
     height: 75%;
