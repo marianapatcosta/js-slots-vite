@@ -98,7 +98,7 @@ const SlotMachine = () => {
       ])
     );
 
-    spinAnimationRef.current!.play();
+    // spinAnimationRef.current!.play();
   }, [reels, isSoundOn, slotWheelSound]);
 
   const onSpinningEnd = useCallback(
@@ -159,40 +159,44 @@ const SlotMachine = () => {
   }, [isMusicOn, themeMusic, playThemeMusic]);
 
   useEffect(() => {
-    document.addEventListener('mousedown', playThemeMusic);
-    return () => document.removeEventListener('mousedown', playThemeMusic);
-  }, [playThemeMusic]);
-
-  useEffect(() => {
-    if (!reels.length) {
+    if (!reels) {
       return;
     }
-    const grid: [number, number] = [ROW_NUMBER, 4];
-    const tl = gsap.timeline(/* { repeat: -1, repeatDelay: 0.5 } */);
+    document.addEventListener('mousedown', playThemeMusic);
+    return () => document.removeEventListener('mousedown', playThemeMusic);
+  }, [playThemeMusic, reels]);
+
+  useEffect(() => {
+    reelsSelector('#reel').forEach(reel => {
+      reel.querySelectorAll('#symbol').forEach((s, index) => {
+        gsap.set('#symbol', {
+          y: (index: number) => index * remToPixel(SYMBOL_SIZE),
+        });
+      });
+    });
+    const reelHeight: number = 4 * SYMBOL_SIZE * 16;
+    const wrapOffsetTop = -(SYMBOL_SIZE * 16);
+    const wrapOffsetBottom = reelHeight + wrapOffsetTop;
+    var wrap = gsap.utils.wrap(wrapOffsetTop, wrapOffsetBottom);
+
     spinAnimationRef.current = gsap.to(reelsSelector('#symbol'), {
-      duration: 100,
-      /*      ease: 'none', */
-      y: remToPixel(SYMBOL_SIZE) * reels[0].length - 4,
-      paused: true,
-      ease: 'power1.inOut',
-      /* duration: 0.5, 
-       stagger: {
-        amount: 1.5,
-        grid: grid,
-      },*/
+      duration: 3,
+      y: `+=${reelHeight}`,
+      /*  paused: true, */
+      ease: 'none',
+      modifiers: {
+        y: gsap.utils.unitize(wrap),
+      },
+      repeat: -1,
       // onRepeat: () => setReels(prevReels => prevReels.map(([firstReel, ...rest]) => [...rest, firstReel])),
       // onComplete: () => onSpinningEnd(slotScreen),
     });
-
-    return () => {
-      spinAnimationRef.current?.kill();
-    };
-  }, [reels, reelsSelector, onSpinningEnd]);
+  }, [reels]);
 
   return (
     <div className={styles['slot-machine']}>
       <WinsDisplay />
-      <Reels ref={reelsRef} reels={reels /* .map(reel => reel.slice(0, 4) )*/} />
+      <Reels ref={reelsRef} reels={reels.map(reel => reel.slice(0, 4))} />
       <Controllers isSpinning={isSpinning} onSpin={onSpin} />
     </div>
   );
