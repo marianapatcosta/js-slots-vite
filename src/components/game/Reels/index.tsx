@@ -6,14 +6,15 @@ import styles from './styles.module.scss';
 
 interface ReelsProps {
   reels: Symbol[][];
+  onSpinEnd: () => void;
 }
 
 const Reels: React.FunctionComponent<ReelsProps & RefAttributes<HTMLDivElement>> = forwardRef(
-  ({ reels }, ref) => {
+  ({ reels, onSpinEnd }, ref) => {
     return (
       <div className={styles.reels} ref={ref}>
-        {reels.map(reel => (
-          <Reel reel={reel} key={`reel-${nanoid()}`} />
+        {reels.map((reel, index) => (
+          <Reel reel={reel} key={`reel-${nanoid()}`} reelIndex={index} onSpinEnd={onSpinEnd} />
         ))}
         <PayLines />
       </div>

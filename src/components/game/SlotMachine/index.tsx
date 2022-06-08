@@ -1,19 +1,11 @@
-import {
-  useCallback,
-  useContext,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { gsap } from 'gsap';
 import { Controllers, Reels, WinsDisplay } from '@/components';
-import { ROW_NUMBER, SYMBOLS_METADATA, SYMBOL_SIZE } from '@/game-configs';
+import { REELS_NUMBER, ROW_NUMBER, SYMBOLS_METADATA, SYMBOL_SIZE } from '@/game-configs';
 import { ModalType, SlotScreenResult, Symbol } from '@/types';
-import { SPIN_ENDED, GAME_RESET, GAME_LEFT, NEW_SPIN_PREPARED } from '@/store/action-types';
+import { SPIN_ENDED, GAME_RESET, GAME_LEFT, NEW_SPIN_PREPARED, SPAN } from '@/store/action-types';
 import {
   getScreenResult,
   getScreenWithBonusWildcards,
@@ -30,11 +22,12 @@ import { nanoid } from 'nanoid';
 const SlotMachine = () => {
   const [t] = useTranslation();
   const [reels, setReels] = useState<Symbol[][]>([]);
-  const [isSpinning, setIsSpinning] = useState<boolean>(false);
   const isMusicOn = useSelector((state: State) => state.settings.isMusicOn);
   const isSoundOn = useSelector((state: State) => state.settings.isSoundOn);
+  const bet = useSelector((state: State) => state.slotMachine.bet);
   const credits = useSelector((state: State) => state.slotMachine.credits);
   const freeSpins = useSelector((state: State) => state.slotMachine.freeSpins);
+  const isSpinning = useSelector((state: State) => state.slotMachine.isSpinning);
   const isAutoSpinOn = useSelector((state: State) => state.slotMachine.isAutoSpinOn);
   const hasOngoingGame = useSelector((state: State) => state.slotMachine.hasOngoingGame);
   const resetGameOnMount = useSelector((state: State) => state.slotMachine.resetGameOnMount);
@@ -81,7 +74,12 @@ const SlotMachine = () => {
   }, [isMusicOn, themeMusic]);
 
   const onSpin = useCallback(() => {
-    setIsSpinning(true);
+    if (bet > credits) {
+      return;
+    }
+    const action = { type: SPAN };
+
+    dispatch(action);
     if (isSoundOn) {
       slotWheelSound.play();
       slotWheelSound.loop = true;
@@ -91,15 +89,32 @@ const SlotMachine = () => {
       return reel.slice(randomIndex, randomIndex + 3);
     });
 
-    setReels(prevReels =>
+    /*  setReels(prevReels =>
       prevReels.map((reel, index) => [
         ...reel,
         ...slotScreen[index].map(item => ({ ...item, id: nanoid() })),
       ])
-    );
+    ); */
 
     // spinAnimationRef.current!.play();
   }, [reels, isSoundOn, slotWheelSound]);
+
+  const findSlotScreen = (): Symbol[][] => {
+    // find the id of symbol at the top of each reel
+    const firstSymbols = [...Array(5)]
+      .map((_, reelIndex) => {
+        return [...document.querySelectorAll(`#symbol-${reelIndex}`)].find(s => {
+          const translateY: number = s.style.transform?.split(', ')[1]?.split('px')[0];
+
+          return (
+            +translateY > -remToPixel(SYMBOL_SIZE / 2) && +translateY < remToPixel(SYMBOL_SIZE / 2)
+          );
+        });
+      })
+      .map(symbol => symbol?.dataset.value);
+
+    console.log({ firstSymbols });
+  };
 
   const onSpinningEnd = useCallback(
     (slotScreen: Symbol[][]) => {
@@ -120,7 +135,6 @@ const SlotMachine = () => {
       }
       const action = { type: SPIN_ENDED, payload: slotResult };
       dispatch(action);
-      setIsSpinning(false);
 
       // TODO CHECK credits balance: if 0
       /*   if (!credits) {
@@ -159,6 +173,7 @@ const SlotMachine = () => {
   }, [isMusicOn, themeMusic, playThemeMusic]);
 
   useEffect(() => {
+    console.log(99, reels);
     if (!reels) {
       return;
     }
@@ -166,37 +181,14 @@ const SlotMachine = () => {
     return () => document.removeEventListener('mousedown', playThemeMusic);
   }, [playThemeMusic, reels]);
 
-  useEffect(() => {
-    reelsSelector('#reel').forEach(reel => {
-      reel.querySelectorAll('#symbol').forEach((s, index) => {
-        gsap.set('#symbol', {
-          y: (index: number) => index * remToPixel(SYMBOL_SIZE),
-        });
-      });
-    });
-    const reelHeight: number = 4 * SYMBOL_SIZE * 16;
-    const wrapOffsetTop = -(SYMBOL_SIZE * 16);
-    const wrapOffsetBottom = reelHeight + wrapOffsetTop;
-    var wrap = gsap.utils.wrap(wrapOffsetTop, wrapOffsetBottom);
-
-    spinAnimationRef.current = gsap.to(reelsSelector('#symbol'), {
-      duration: 3,
-      y: `+=${reelHeight}`,
-      /*  paused: true, */
-      ease: 'none',
-      modifiers: {
-        y: gsap.utils.unitize(wrap),
-      },
-      repeat: -1,
-      // onRepeat: () => setReels(prevReels => prevReels.map(([firstReel, ...rest]) => [...rest, firstReel])),
-      // onComplete: () => onSpinningEnd(slotScreen),
-    });
-  }, [reels]);
-
   return (
     <div className={styles['slot-machine']}>
       <WinsDisplay />
-      <Reels ref={reelsRef} reels={reels.map(reel => reel.slice(0, 4))} />
+      <Reels
+        ref={reelsRef}
+        reels={reels /* .map(reel => reel.slice(0, 4) )*/}
+        onSpinEnd={findSlotScreen}
+      />
       <Controllers isSpinning={isSpinning} onSpin={onSpin} />
     </div>
   );
