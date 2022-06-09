@@ -45,6 +45,11 @@
     grid-row: span 2;
     place-self: center;
 
+    &[disabled] {
+      filter: grayscale(1);
+      -webkit-filter: grayscale(1);
+    }
+
     &:before {
       border-radius: 50% 50% 25% 25%;
       -webkit-border-radius: 50% 50% 25% 25%;

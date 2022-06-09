@@ -12,7 +12,7 @@ import {
 } from '@/store/action-types';
 import { ButtonIcon } from '@/components/ui/ButtonIcon';
 import { InfoSvg, SettingsSvg } from '@/assets/svg';
-import { ModalContext } from '@/context/ModalContext';
+import { ModalContext, ModalContextData } from '@/context/ModalContext';
 import { ModalType } from '@/types';
 import { BubblePressSound, CasinoPressSound, CoinsSound, SelectPressSound } from '@/assets/sounds';
 import styles from './styles.module.scss';
@@ -36,7 +36,7 @@ const Controllers: React.FC<ControllersProps> = ({ isSpinning, onSpin }) => {
   const selectPressSound: HTMLAudioElement = new Audio(SelectPressSound);
   const bubblePressSound: HTMLAudioElement = new Audio(BubblePressSound);
 
-  const { openModal } = useContext(ModalContext);
+  const { openModal } = useContext<ModalContextData>(ModalContext);
 
   const handleUpdateControllersState = useCallback(
     (actionType: string, newValue: unknown) => {
@@ -116,7 +116,6 @@ const Controllers: React.FC<ControllersProps> = ({ isSpinning, onSpin }) => {
       <Button
         label={t('controllers.autoSpin')}
         isPressed={isAutoSpinOn}
-        disabled={isSpinning}
         buttonSound={isSoundOn ? selectPressSound : null}
         onClick={() => handleUpdateControllersState(AUTO_SPIN_STATE_CHANGED, !isAutoSpinOn)}
       />

@@ -1,67 +1,79 @@
-import { useEffect, useRef } from 'react';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { useSelector } from 'react-redux';
 import { State } from '@/store/types';
 import { Symbol as SymbolComponent } from '@/components';
-import { SYMBOL_SIZE } from '@/game-configs';
+import { REELS_NUMBER, ROW_NUMBER, SYMBOL_SIZE } from '@/game-configs';
 import type { Symbol } from '@/types';
 import { remToPixel } from '@/utils';
+import { ReelsContext, ReelsContextData } from '@/context/ReelsContext';
 import styles from './styles.module.scss';
 
 interface ReelProps {
-  reel: Symbol[];
+  symbols: Symbol[];
   reelIndex: number;
-  onSpinEnd: () => void;
+  animationDuration: number;
 }
 
-const Reel: React.FC<ReelProps> = ({ reel, reelIndex, onSpinEnd }) => {
-  const isSpinning = useSelector((state: State) => state.slotMachine.isSpinning);
+const Reel: React.FC<ReelProps> = ({ symbols: reel, reelIndex, animationDuration }) => {
+  const areSlotsSpinning = useSelector((state: State) => state.slotMachine.isSpinning);
+  const [isReelSpinning, setIsReelsSpinning] = useState<boolean>(false);
   const reelRef = useRef<HTMLDivElement>(null);
   const spinAnimationRef = useRef<gsap.core.Tween | null>(null);
   const reelSelector: gsap.utils.SelectorFunc = gsap.utils.selector(reelRef);
   const symbolSize: number = remToPixel(SYMBOL_SIZE);
+
+  const { onSpinningEnd, onReelAnimationEnd } = useContext<ReelsContextData>(ReelsContext);
+
+  const onSpinningAnimationEnd = useCallback(() => {
+    setIsReelsSpinning(false);
+    onReelAnimationEnd(reelIndex);
+    if (reelIndex === REELS_NUMBER - 1) {
+      onSpinningEnd();
+    }
+  }, [reelIndex, onReelAnimationEnd, onSpinningEnd]);
+
+  useEffect(() => {
+    if (!areSlotsSpinning) {
+      return;
+    }
+    setIsReelsSpinning(true);
+    spinAnimationRef.current?.play();
+  }, [areSlotsSpinning]);
 
   useEffect(() => {
     gsap.set(`#symbol-${reelIndex}`, {
       y: (index: number) => index * symbolSize,
     });
     const reelHeight: number = reel.length * symbolSize;
-    const wrapOffsetTop = -symbolSize;
-    const wrapOffsetBottom = reelHeight + wrapOffsetTop;
-    var wrap = gsap.utils.wrap(wrapOffsetTop, wrapOffsetBottom);
-
-    if (!isSpinning) {
-      return;
-    }
-
+    const wrapOffsetTop: number = -symbolSize;
+    const wrapOffsetBottom: number = reelHeight + wrapOffsetTop;
+    const wrap = gsap.utils.wrap(wrapOffsetTop, wrapOffsetBottom);
     spinAnimationRef.current = gsap.to(reelSelector(`#symbol-${reelIndex}`), {
-      duration: 3,
+      duration: animationDuration,
       y: `+=${reelHeight}`,
-      /* paused: true, */
-      ease: 'none',
+      ease: 'power1.in',
       modifiers: {
         y: gsap.utils.unitize(wrap),
       },
-      repeat: -1,
-      onComplete: () => console.log(8888),
+      onComplete: onSpinningAnimationEnd,
     });
-
-    // TODO: is there any GSAP util to stop a repeated animation after a time amount?
-    setTimeout(() => {
-      // call here onSpinEnd method to access the result
-      onSpinEnd();
-      spinAnimationRef.current?.kill();
-    }, 4800);
-
+    spinAnimationRef.current.pause();
     return () => {
       spinAnimationRef.current?.kill();
     };
-  }, [reelSelector, reelIndex, reel, symbolSize, isSpinning]);
+  }, [reelSelector, reelIndex, reel, symbolSize, onSpinningAnimationEnd]);
 
   return (
     <div className={styles.reel} ref={reelRef}>
-      {reel.map(symbol => (
-        <SymbolComponent symbol={symbol} key={symbol.id} reelIndex={reelIndex} />
+      {reel.map((symbol, index) => (
+        <SymbolComponent
+          symbol={symbol}
+          isSpinning={isReelSpinning}
+          key={symbol.id}
+          reelIndex={reelIndex}
+          symbolIndex={index < ROW_NUMBER ? index : null}
+        />
       ))}
     </div>
   );

@@ -1,3 +1,5 @@
+import React from 'react';
+
 export const enum Locale {
   EN = 'en-UK',
   PT = 'pt-PT',
@@ -51,7 +53,7 @@ export enum SymbolType {
 export type Symbol = {
   id: string;
   type: SymbolType;
-  icon: () => JSX.Element;
+  icon: React.FC<{ animate: boolean }>;
   frequency?: number;
   winFactor?: number[];
   loseFactor?: number[];
@@ -71,7 +73,7 @@ export enum PayLineType {
 
 export type PayLine = {
   type: PayLineType;
-  color: Colors;
+  color: Color;
   positions: Position[];
 };
 
@@ -88,7 +90,7 @@ export type SlotScreenResult = {
   losePayLines: PayLine[];
 };
 
-export enum Colors {
+export enum Color {
   PINK = '#fe4495',
   BLUE = '#37a8ee',
   GREEN = '#008000',
