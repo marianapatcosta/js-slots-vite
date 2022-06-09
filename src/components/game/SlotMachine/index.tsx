@@ -119,7 +119,6 @@ const SlotMachine = () => {
       openModal(ModalType.RESET, { hasNoCredits: true });
       return;
     }
-    console.log({ slotResult, finalSlotScreen });
 
     setTimeout(() => {
       dispatch({ type: NEW_SPIN_PREPARED });

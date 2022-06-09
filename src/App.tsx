@@ -63,7 +63,7 @@ const App = () => {
     setToastData(prevData => prevData.filter((_, index) => index !== toastIndex));
   const toastListRef = useRef<HTMLDivElement>(null);
 
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const onLoadEnd = (): void => setIsLoading(false);
 
   const intervalMS = 60 * 60 * 1000;
