@@ -2,18 +2,12 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import { useSelector } from 'react-redux';
 import { State } from '@/store/types';
-import {
-  ROW_NUMBER,
-  SYMBOL_SIZE,
-  SYMBOL_SIZE_SMALL,
-  PAY_LINES_METADATA,
-  REELS_NUMBER,
-} from '@/game-configs';
+import { ROW_NUMBER, SYMBOL_SIZE, SYMBOL_SIZE_SMALL, PAY_LINES_METADATA } from '@/game-configs';
 import type { Position, PayLine } from '@/types';
 import { remToPixel } from '@/utils';
 import styles from './styles.module.scss';
 
-type SquaredData = { top: number; color: string; lineNumber: number }[];
+type LineNumberSquareData = { top: number; color: string; lineNumber: number }[];
 
 const PayLines: React.FC = () => {
   const showPayLines = useSelector((state: State) => state.slotMachine.showPayLines);
@@ -22,6 +16,7 @@ const PayLines: React.FC = () => {
   const canvasWrapperRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [symbolSize, setSymbolSize] = useState(SYMBOL_SIZE);
+  const [lineNumbersSquaresData, setLineNumbersSquaresData] = useState<LineNumberSquareData>([]);
 
   const getYCoordOffset = useCallback(
     (lineNumber: number): number => {
@@ -62,42 +57,57 @@ const PayLines: React.FC = () => {
       context.strokeStyle = winningLine.color;
       context.fillStyle = winningLine.color;
 
-      // draw line from the container start border only if first reel is in the positions array
-      if (winningLine.positions[0].reel === 0) {
-        context.lineTo(0, getYCoord(winningLine.positions[0].row, lineNumber));
-      }
+      context.lineTo(0, getYCoord(winningLine.positions[0].row, lineNumber));
+
       winningLine.positions.forEach(({ reel, row }: Position) => {
         context.lineTo(getXCoord(reel), getYCoord(row, lineNumber));
       });
 
-      // draw line to the end of container only if last reel is in the positions array
-      if (winningLine.positions[winningLine.positions.length - 1].reel === REELS_NUMBER - 1) {
-        context.lineTo(
-          canvasRef.current?.width!,
-          getYCoord(winningLine.positions[winningLine.positions.length - 1].row, lineNumber)
-        );
-      }
+      context.lineTo(
+        canvasRef.current?.width!,
+        getYCoord(winningLine.positions[winningLine.positions.length - 1].row, lineNumber)
+      );
 
       context.stroke();
     },
     [getYCoord, getXCoord]
   );
 
+  const filterPayLinesToRender = useCallback((payLinesMetadata: PayLine[]): PayLine[] => {
+    const payLineTypes = payLinesMetadata.map(({ type }: PayLine) => type);
+    return Object.values(PAY_LINES_METADATA).filter(({ type }: PayLine) =>
+      payLineTypes.includes(type)
+    );
+  }, []);
+
   const getPayLinesMetadata = useCallback((): PayLine[] => {
     if (winPayLines?.length && losePayLines?.length) {
-      return [...winPayLines, ...losePayLines];
+      return filterPayLinesToRender([...winPayLines, ...losePayLines]);
     }
 
     if (winPayLines?.length) {
-      return winPayLines;
+      return filterPayLinesToRender(winPayLines);
     }
 
     if (losePayLines?.length) {
-      return losePayLines;
+      return filterPayLinesToRender(losePayLines);
     }
 
     return Object.values(PAY_LINES_METADATA);
-  }, [winPayLines, losePayLines]);
+  }, [winPayLines, losePayLines, filterPayLinesToRender]);
+
+  const getLineNumberSquaresData = useCallback(
+    (payLines: PayLine[]): LineNumberSquareData =>
+      payLines.map((data: PayLine) => {
+        const lineNumber: number = parseInt(data.type.split('payLine')[1]);
+        return {
+          top: getYCoord(data.positions[0].row, lineNumber),
+          color: data.color,
+          lineNumber,
+        };
+      }),
+    [getYCoord]
+  );
 
   const drawCanvas = useCallback((): void => {
     if (!canvasRef.current) {
@@ -107,24 +117,14 @@ const PayLines: React.FC = () => {
     // adjust canvas dimension to be accurate with pixel-based calculations
     canvasRef.current.width = canvasRef.current?.offsetWidth;
     canvasRef.current.height = canvasRef.current?.offsetHeight;
-    const winningSequencesMetadata: PayLine[] = getPayLinesMetadata();
-    winningSequencesMetadata.forEach((sequenceMetadata: PayLine) => {
+    const payLinesMetadata: PayLine[] = getPayLinesMetadata();
+    const lineNumbersData: LineNumberSquareData = getLineNumberSquaresData(payLinesMetadata);
+    setLineNumbersSquaresData(lineNumbersData);
+    payLinesMetadata.forEach((sequenceMetadata: PayLine) => {
       const lineNumber: number = parseInt(sequenceMetadata.type.split('payLine')[1]);
       drawPayLine(context, sequenceMetadata, lineNumber);
     });
-  }, [drawPayLine, getPayLinesMetadata]);
-
-  const getSquaresData = (): SquaredData =>
-    Object.values(PAY_LINES_METADATA).map((data: PayLine, index: number) => {
-      const lineNumber: number = parseInt(data.type.split('payLine')[1]);
-      return {
-        top: getYCoord(data.positions[0].row, lineNumber),
-        color: data.color,
-        lineNumber: index + 1,
-      };
-    });
-
-  const squaresData: SquaredData = getSquaresData();
+  }, [drawPayLine, getPayLinesMetadata, getLineNumberSquaresData]);
 
   const updateSymbolSize = useCallback(() => {
     if (window.matchMedia('(max-width: 480px)').matches && symbolSize !== SYMBOL_SIZE_SMALL) {
@@ -158,7 +158,7 @@ const PayLines: React.FC = () => {
     >
       <div className={styles['pay-lines']} ref={canvasWrapperRef}>
         <>
-          {squaresData.map(data => (
+          {lineNumbersSquaresData.map(data => (
             <div
               style={{ top: `${data.top}px`, backgroundColor: data.color }}
               className={styles['pay-lines__number']}
