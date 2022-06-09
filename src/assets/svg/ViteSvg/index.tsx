@@ -65,7 +65,7 @@ const ViteSvg: React.FC<SymbolSvgProps> = ({ animate }) => {
       <path
         d="M188 205C188 205 193.778 192.25 200 193.525C206.222 194.8 213.778 195.65 213.333 193.525C212.889 191.4 220 188 220 188"
         stroke="black"
-        stroke-width="2"
+        strokeWidth="2"
       />
       <g className={animate ? styles['icon__boom'] : ''}>
         <path
@@ -106,9 +106,9 @@ const ViteSvg: React.FC<SymbolSvgProps> = ({ animate }) => {
           width="58"
           height="58"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feColorMatrix
             in="SourceAlpha"
             type="matrix"
@@ -130,10 +130,10 @@ const ViteSvg: React.FC<SymbolSvgProps> = ({ animate }) => {
           y2="234.774"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#41D1FF" />
-          <stop offset="0.5" stop-color="#7F83FF" />
-          <stop offset="0.604167" stop-color="#8C72FE" />
-          <stop offset="1" stop-color="#BD34FE" />
+          <stop stopColor="#41D1FF" />
+          <stop offset="0.5" stopColor="#7F83FF" />
+          <stop offset="0.604167" stopColor="#8C72FE" />
+          <stop offset="1" stopColor="#BD34FE" />
         </linearGradient>
         <linearGradient
           id="paint1_linear_247_5"
@@ -143,9 +143,9 @@ const ViteSvg: React.FC<SymbolSvgProps> = ({ animate }) => {
           y2="200.822"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#FFA800" />
-          <stop offset="0.0833333" stop-color="#FFDD35" />
-          <stop offset="1" stop-color="#FFA800" />
+          <stop stopColor="#FFA800" />
+          <stop offset="0.0833333" stopColor="#FFDD35" />
+          <stop offset="1" stopColor="#FFA800" />
         </linearGradient>
       </defs>
     </svg>
