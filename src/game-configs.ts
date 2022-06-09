@@ -13,7 +13,7 @@ import {
   ViteSvg,
   VueSvg,
 } from '@/assets/svg';
-import { Colors, Symbol, SymbolType, PayLine, PayLineType } from '@/types';
+import { Color, Symbol, SymbolType, PayLine, PayLineType } from '@/types';
 
 const WIN_FACTORS: Readonly<{ [key: string]: number[] }> = {
   VERY_LOW: [1, 5, 20],
@@ -120,7 +120,7 @@ export const SYMBOLS_METADATA: Readonly<{ [key in SymbolType]: Omit<Symbol, 'id'
 export const PAY_LINES_METADATA: Readonly<{ [key in PayLineType]: PayLine }> = {
   [PayLineType.PL_1]: {
     type: PayLineType.PL_1,
-    color: Colors.BLUE,
+    color: Color.BLUE,
     positions: [
       { reel: 0, row: 1 },
       { reel: 1, row: 1 },
@@ -131,7 +131,7 @@ export const PAY_LINES_METADATA: Readonly<{ [key in PayLineType]: PayLine }> = {
   },
   [PayLineType.PL_2]: {
     type: PayLineType.PL_2,
-    color: Colors.GREEN,
+    color: Color.GREEN,
     positions: [
       { reel: 0, row: 0 },
       { reel: 1, row: 0 },
@@ -142,7 +142,7 @@ export const PAY_LINES_METADATA: Readonly<{ [key in PayLineType]: PayLine }> = {
   },
   [PayLineType.PL_3]: {
     type: PayLineType.PL_3,
-    color: Colors.PURPLE,
+    color: Color.PURPLE,
     positions: [
       { reel: 0, row: 2 },
       { reel: 1, row: 2 },
@@ -153,7 +153,7 @@ export const PAY_LINES_METADATA: Readonly<{ [key in PayLineType]: PayLine }> = {
   },
   [PayLineType.PL_4]: {
     type: PayLineType.PL_4,
-    color: Colors.PINK,
+    color: Color.PINK,
     positions: [
       { reel: 0, row: 0 },
       { reel: 1, row: 1 },
@@ -164,7 +164,7 @@ export const PAY_LINES_METADATA: Readonly<{ [key in PayLineType]: PayLine }> = {
   },
   [PayLineType.PL_5]: {
     type: PayLineType.PL_5,
-    color: Colors.ORANGE,
+    color: Color.ORANGE,
     positions: [
       { reel: 0, row: 2 },
       { reel: 1, row: 1 },
@@ -175,7 +175,7 @@ export const PAY_LINES_METADATA: Readonly<{ [key in PayLineType]: PayLine }> = {
   },
   [PayLineType.PL_6]: {
     type: PayLineType.PL_6,
-    color: Colors.LIGHT_GREEN,
+    color: Color.LIGHT_GREEN,
     positions: [
       { reel: 0, row: 1 },
       { reel: 1, row: 2 },
@@ -186,7 +186,7 @@ export const PAY_LINES_METADATA: Readonly<{ [key in PayLineType]: PayLine }> = {
   },
   [PayLineType.PL_7]: {
     type: PayLineType.PL_7,
-    color: Colors.GREY,
+    color: Color.GREY,
     positions: [
       { reel: 0, row: 1 },
       { reel: 1, row: 0 },
@@ -197,7 +197,7 @@ export const PAY_LINES_METADATA: Readonly<{ [key in PayLineType]: PayLine }> = {
   },
   [PayLineType.PL_8]: {
     type: PayLineType.PL_8,
-    color: Colors.RED,
+    color: Color.RED,
     positions: [
       { reel: 0, row: 2 },
       { reel: 1, row: 2 },
@@ -208,7 +208,7 @@ export const PAY_LINES_METADATA: Readonly<{ [key in PayLineType]: PayLine }> = {
   },
   [PayLineType.PL_9]: {
     type: PayLineType.PL_9,
-    color: Colors.YELLOW,
+    color: Color.YELLOW,
     positions: [
       { reel: 0, row: 0 },
       { reel: 1, row: 0 },
@@ -232,4 +232,7 @@ export const BONUS_WILDCARDS_NUMBER: Readonly<number> = 4;
 export const SYMBOL_SIZE: Readonly<number> = 5; // in rem
 export const SYMBOL_SIZE_SMALL: Readonly<number> = 4; // in rem
 
-export const LOADING_TIME: number = 3000; // in milliseconds
+export const MIN_SPIN_ANIMATION_DURATION: Readonly<number> = 3; // in seconds
+export const MAX_SPIN_ANIMATION_DURATION: Readonly<number> = 4; // in seconds
+
+export const ANIMATE_RESULTS_DURATION: Readonly<number> = 5000; // in miliseconds

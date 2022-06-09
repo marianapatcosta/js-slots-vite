@@ -13,3 +13,5 @@ export const LOCALES_DATA: InputData[] = [
 
 // TODO update url after deployed
 export const JS_SLOTS_URL = 'https://js-slots.com';
+
+export const LOADING_TIME: number = 3000; // in milliseconds

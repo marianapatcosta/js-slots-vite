@@ -1,7 +1,7 @@
-import { ToastData } from '@/types';
 import { createContext } from 'react';
+import { ToastData } from '@/types';
 
-interface ToastContextData {
+export interface ToastContextData {
   addToast: (newToast: ToastData) => void;
 }
 

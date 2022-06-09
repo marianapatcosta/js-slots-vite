@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
+import { useSelector } from 'react-redux';
+import { State } from '@/store/types';
 import {
   ROW_NUMBER,
   SYMBOL_SIZE,
@@ -9,14 +11,14 @@ import {
 } from '@/game-configs';
 import type { Position, PayLine } from '@/types';
 import { remToPixel } from '@/utils';
-import { useSelector } from 'react-redux';
-import { State } from '@/store/types';
 import styles from './styles.module.scss';
+
+type SquaredData = { top: number; color: string; lineNumber: number }[];
 
 const PayLines: React.FC = () => {
   const showPayLines = useSelector((state: State) => state.slotMachine.showPayLines);
   const winPayLines: PayLine[] = useSelector((state: State) => state.slotMachine.winPayLines);
-  const losePayLines = useSelector((state: State) => state.slotMachine.losePayLines);
+  const losePayLines: PayLine[] = useSelector((state: State) => state.slotMachine.losePayLines);
   const canvasWrapperRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [symbolSize, setSymbolSize] = useState(SYMBOL_SIZE);
@@ -52,17 +54,6 @@ const PayLines: React.FC = () => {
     },
     [symbolSize, getYCoordOffset]
   );
-
-  const getSquaresData = (): { top: number; color: string; lineNumber: number }[] => {
-    return Object.values(PAY_LINES_METADATA).map((data: PayLine, index: number) => {
-      const lineNumber: number = parseInt(data.type.split('payLine')[1]);
-      return {
-        top: getYCoord(data.positions[0].row, lineNumber),
-        color: data.color,
-        lineNumber: index + 1,
-      };
-    });
-  };
 
   const drawPayLine = useCallback(
     (context: CanvasRenderingContext2D, winningLine: PayLine, lineNumber: number): void => {
@@ -102,7 +93,7 @@ const PayLines: React.FC = () => {
     }
 
     if (losePayLines?.length) {
-      return winPayLines;
+      return losePayLines;
     }
 
     return Object.values(PAY_LINES_METADATA);
@@ -122,6 +113,18 @@ const PayLines: React.FC = () => {
       drawPayLine(context, sequenceMetadata, lineNumber);
     });
   }, [drawPayLine, getPayLinesMetadata]);
+
+  const getSquaresData = (): SquaredData =>
+    Object.values(PAY_LINES_METADATA).map((data: PayLine, index: number) => {
+      const lineNumber: number = parseInt(data.type.split('payLine')[1]);
+      return {
+        top: getYCoord(data.positions[0].row, lineNumber),
+        color: data.color,
+        lineNumber: index + 1,
+      };
+    });
+
+  const squaresData: SquaredData = getSquaresData();
 
   const updateSymbolSize = useCallback(() => {
     if (window.matchMedia('(max-width: 480px)').matches && symbolSize !== SYMBOL_SIZE_SMALL) {
@@ -155,7 +158,7 @@ const PayLines: React.FC = () => {
     >
       <div className={styles['pay-lines']} ref={canvasWrapperRef}>
         <>
-          {getSquaresData().map(data => (
+          {squaresData.map(data => (
             <div
               style={{ top: `${data.top}px`, backgroundColor: data.color }}
               className={styles['pay-lines__number']}
