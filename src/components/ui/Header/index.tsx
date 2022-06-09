@@ -6,13 +6,13 @@ import { ShareSvg } from '@/assets/svg';
 import { ToastType } from '@/types';
 import { ButtonIcon } from '@/components';
 import { JS_SLOTS_URL } from '@/constants';
-import { ToastContext } from '@/context/ToastContext';
+import { ToastContext, ToastContextData } from '@/context/ToastContext';
 import { BubblePressSound } from '@/assets/sounds';
 import styles from './styles.module.scss';
 
 const Header: React.FC = () => {
   const [t] = useTranslation();
-  const { addToast } = useContext(ToastContext);
+  const { addToast } = useContext<ToastContextData>(ToastContext);
   const isSoundOn = useSelector((state: State) => state.settings.isSoundOn);
   const bubblePressSound: HTMLAudioElement = new Audio(BubblePressSound);
 

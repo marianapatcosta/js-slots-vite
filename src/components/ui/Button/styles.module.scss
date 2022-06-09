@@ -12,13 +12,13 @@
   -ms-border-radius: 0.5rem;
   -o-border-radius: 0.5rem;
   min-width: 5.75rem;
-  transition: box-shadow 0.3s ease-in-out transform 0.3s ease-in-out;
-  -webkit-transition: box-shadow 0.3s ease-in-out transform 0.32s ease-in-out;
-  -moz-transition: box-shadow 0.3s ease-in-out transform 0.32s ease-in-out;
-  -ms-transition: box-shadow 0.3s ease-in-out transform 0.32s ease-in-out;
-  -o-transition: box-shadow 0.3s ease-in-out transform 0.32s ease-in-out;
   position: relative;
   user-select: none;
+  transition: box-shadow 0.3s ease-in-out transform 0.3s ease-in-out;
+  -webkit-transition: box-shadow 0.3s ease-in-out transform 0.3s ease-in-out;
+  -moz-transition: box-shadow 0.3s ease-in-out transform 0.3s ease-in-out;
+  -ms-transition: box-shadow 0.3s ease-in-out transform 0.3s ease-in-out;
+  -o-transition: box-shadow 0.3s ease-in-out transform 0.3s ease-in-out;
 
   &:before {
     content: '';

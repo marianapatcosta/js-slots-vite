@@ -1,15 +1,15 @@
-import { ChangeEvent, useCallback, useContext, useState } from 'react';
+import { ChangeEvent, useContext, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Button, Checkbox } from '@/components';
 import { GAME_RESET, RESET_MODAL_DISMISSED } from '@/store/action-types';
-import { ModalContext } from '@/context/ModalContext';
+import { ModalContext, ModalContextData } from '@/context/ModalContext';
 import styles from './styles.module.scss';
 
 const ResetGame: React.FC = () => {
   const [t] = useTranslation();
   const dispatch = useDispatch();
-  const { modalProps, closeModal } = useContext(ModalContext);
+  const { modalProps, closeModal } = useContext<ModalContextData>(ModalContext);
   const [doNotShowAgain, setDoNotShowAgain] = useState<boolean>(false);
   const buttonLabel: string = modalProps?.hasNoCredits ? t('global.ok') : t('global.yes');
 

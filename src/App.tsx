@@ -3,6 +3,7 @@ import { Provider } from 'react-redux';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { useRegisterSW } from 'virtual:pwa-register/react';
 import { nanoid } from 'nanoid';
+import { useTranslation } from 'react-i18next';
 import {
   About,
   Footer,
@@ -18,10 +19,8 @@ import { store } from '@/store';
 import { ModalContext } from '@/context/ModalContext';
 import { ModalType, ToastData, ToastType } from '@/types';
 import { ToastContext } from '@/context/ToastContext';
-import { TOAST_OFFSET } from '@/constants';
-import { LOADING_TIME } from '@/game-configs';
+import { TOAST_OFFSET, LOADING_TIME } from '@/constants';
 import styles from './index.module.scss';
-import { useTranslation } from 'react-i18next';
 
 const MODALS_DATA = {
   [ModalType.ABOUT]: {
@@ -64,7 +63,7 @@ const App = () => {
     setToastData(prevData => prevData.filter((_, index) => index !== toastIndex));
   const toastListRef = useRef<HTMLDivElement>(null);
 
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const onLoadEnd = (): void => setIsLoading(false);
 
   const intervalMS = 60 * 60 * 1000;
