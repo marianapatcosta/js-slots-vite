@@ -23,6 +23,11 @@
     -webkit-filter: blur(0.25rem);
   }
 
+  &--colorful {
+    animation: bg-color-change 1s ease-out infinite;
+    -webkit-animation: bg-color-change 1s ease-out infinite;
+  }
+
   &--hidden {
     animation: fade-out 1s ease-in forwards;
     -webkit-animation: fade-out 1s ease-in forwards;
@@ -30,7 +35,7 @@
 
   &--showing {
     opacity: 0;
-    top: calc($symbol-size * var(--symbolIndex));
+    top: calc($symbol-size * var(--symbol-index));
     animation: fade-in 1s 0.2s ease-in forwards;
     -webkit-animation: fade-in 1s 0.2s ease-in forwards;
     transform: scale(0);
@@ -39,7 +44,7 @@
     -ms-transform: scale(0);
     -o-transform: scale(0);
     z-index: -1;
-}
+  }
 }
 
 @media only screen and (min-width: $xs) {
@@ -70,5 +75,14 @@
     -ms-transform: scale(0);
     -o-transform: scale(0);
     z-index: -1;
+  }
+}
+
+@keyframes bg-color-change {
+  0% {
+    background-color: var(--bg-color-from);
+  }
+  100% {
+    background-color: var(--bg-color-to);
   }
 }

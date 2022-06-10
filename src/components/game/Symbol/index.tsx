@@ -1,5 +1,5 @@
-import { useEffect, useState, HTMLAttributes, CSSProperties } from 'react';
-import type { Color, PayLine, Position, Symbol as SymbolType } from '@/types';
+import { useEffect, useState, HTMLAttributes, CSSProperties, useMemo } from 'react';
+import { Color, PayLine, Position, Symbol as SymbolType } from '@/types';
 import { useSelector } from 'react-redux';
 import { State } from '@/store/types';
 import styles from './styles.module.scss';
@@ -25,12 +25,21 @@ const Symbol: React.FC<SymbolProps> = ({
   const bonusWildcardsPositions: Position[] = useSelector(
     (state: State) => state.slotMachine.bonusWildcardsPositions
   );
-
-  const [animatedColor, setAnimatedColor] = useState<Color | undefined>(undefined);
+  const [animatedColors, setAnimatedColors] = useState<Color[] | undefined>(undefined);
   const [willBeReplacedByBonusWildCardSymbol, setWillBeReplacedByBonusWildCardSymbol] =
     useState<boolean>(false);
 
-  const cssVars = { '--symbolIndex': symbolIndex || 0 } as CSSProperties;
+  const cssVars = useMemo(
+    () =>
+      ({
+        '--symbol-index': symbolIndex || 0,
+        '--bg-color-from': !!animatedColors?.length ? animatedColors[0] : 'inherit',
+        '--bg-color-to': !!animatedColors?.length
+          ? animatedColors[animatedColors?.length - 1]
+          : 'inherit',
+      } as CSSProperties),
+    [animatedColors, symbolIndex]
+  );
 
   useEffect(() => {
     if (symbolIndex === null) {
@@ -40,8 +49,8 @@ const Symbol: React.FC<SymbolProps> = ({
     const payLinesContainingTheSymbol: PayLine[] = lines.filter(({ positions }: PayLine) =>
       positions.some(({ reel, row }: Position) => reel === reelIndex && row === symbolIndex)
     );
-    // TODO change animate between colors if more than one
-    setAnimatedColor(payLinesContainingTheSymbol[0]?.color);
+
+    setAnimatedColors(payLinesContainingTheSymbol.map(({ color }) => color));
   }, [winPayLines, losePayLines, reelIndex, symbolIndex]);
 
   useEffect(() => {
@@ -60,13 +69,14 @@ const Symbol: React.FC<SymbolProps> = ({
   return (
     <div
       id={isBonusWildCard ? undefined : `symbol-${reelIndex}`}
-      data-value={isBonusWildCard ? undefined : symbol.id}
       className={`${styles.symbol} ${isSpinning ? styles['symbol--spinning'] : ''} ${
         willBeReplacedByBonusWildCardSymbol ? styles['symbol--hidden'] : ''
-      } ${isBonusWildCard ? styles['symbol--showing'] : ''}`}
-      style={{ ...cssVars, backgroundColor: animatedColor || 'inherit' }}
+      } ${isBonusWildCard ? styles['symbol--showing'] : ''} ${
+        !!animatedColors?.length ? styles['symbol--colorful'] : ''
+      }`}
+      style={{ ...cssVars }}
     >
-      <SymbolIcon animate={!!animatedColor} />
+      <SymbolIcon animate={!!animatedColors?.length} />
     </div>
   );
 };
