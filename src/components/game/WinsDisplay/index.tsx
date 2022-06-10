@@ -2,7 +2,7 @@ import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { State } from '@/store/types';
 import { Lights } from '@/components';
-import { useCounter } from '@/hooks/useCounter';
+import { useCounter } from '@/hooks';
 import styles from './styles.module.scss';
 
 const WinsDisplay: React.FC = () => {

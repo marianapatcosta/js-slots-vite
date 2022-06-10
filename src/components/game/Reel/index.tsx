@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { nanoid } from 'nanoid';
 import { State } from '@/store/types';
 import { Symbol as SymbolComponent } from '@/components';
-import { REELS_NUMBER, ROW_NUMBER, SYMBOL_SIZE, WILDCARD_METADATA } from '@/game-configs';
+import { REELS_NUMBER, ROW_NUMBER, WILDCARD_METADATA } from '@/game-configs';
 import type { Position, Symbol } from '@/types';
 import { remToPixel } from '@/utils';
 import { ReelsContext, ReelsContextData } from '@/context/ReelsContext';
@@ -22,13 +22,13 @@ const Reel: React.FC<ReelProps> = ({ symbols: reel, reelIndex, animationDuration
   const reelRef = useRef<HTMLDivElement>(null);
   const spinAnimationRef = useRef<gsap.core.Tween | null>(null);
   const reelSelector: gsap.utils.SelectorFunc = gsap.utils.selector(reelRef);
-  const symbolSize: number = remToPixel(SYMBOL_SIZE);
 
   const bonusWildCardsPositions: Position[] = useSelector(
     (state: State) => state.slotMachine.bonusWildcardsPositions
   ).filter(({ reel }: Position) => reel === reelIndex);
 
-  const { onSpinningEnd, onReelAnimationEnd } = useContext<ReelsContextData>(ReelsContext);
+  const { symbolSize, onSpinningEnd, onReelAnimationEnd } =
+    useContext<ReelsContextData>(ReelsContext);
 
   const onSpinningAnimationEnd = useCallback(() => {
     setIsReelsSpinning(false);
@@ -47,11 +47,12 @@ const Reel: React.FC<ReelProps> = ({ symbols: reel, reelIndex, animationDuration
   }, [areSlotsSpinning]);
 
   useEffect(() => {
+    const symbolSizeInPx: number = remToPixel(symbolSize);
     gsap.set(`#symbol-${reelIndex}`, {
-      y: (index: number) => index * symbolSize,
+      y: (index: number) => index * symbolSizeInPx,
     });
-    const reelHeight: number = reel.length * symbolSize;
-    const wrapOffsetTop: number = -symbolSize;
+    const reelHeight: number = reel.length * symbolSizeInPx;
+    const wrapOffsetTop: number = -symbolSizeInPx;
     const wrapOffsetBottom: number = reelHeight + wrapOffsetTop;
     const wrap = gsap.utils.wrap(wrapOffsetTop, wrapOffsetBottom);
     spinAnimationRef.current = gsap.to(reelSelector(`#symbol-${reelIndex}`), {
@@ -88,7 +89,6 @@ const Reel: React.FC<ReelProps> = ({ symbols: reel, reelIndex, animationDuration
             reelIndex={reel}
             symbolIndex={row}
             isBonusWildCard={true}
-            style={{ top: `${SYMBOL_SIZE * row}rem` }}
           />
         ))}
     </div>

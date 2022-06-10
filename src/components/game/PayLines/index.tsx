@@ -1,10 +1,11 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import { useSelector } from 'react-redux';
 import { State } from '@/store/types';
-import { ROW_NUMBER, SYMBOL_SIZE, SYMBOL_SIZE_SMALL, PAY_LINES_METADATA } from '@/game-configs';
+import { ROW_NUMBER, PAY_LINES_METADATA } from '@/game-configs';
 import type { Position, PayLine } from '@/types';
 import { remToPixel } from '@/utils';
+import { ReelsContext, ReelsContextData } from '@/context/ReelsContext';
 import styles from './styles.module.scss';
 
 type LineNumberSquareData = { top: number; color: string; lineNumber: number }[];
@@ -15,9 +16,9 @@ const PayLines: React.FC = () => {
   const losePayLines: PayLine[] = useSelector((state: State) => state.slotMachine.losePayLines);
   const canvasWrapperRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const [symbolSize, setSymbolSize] = useState(SYMBOL_SIZE);
-  const [lineNumbersSquaresData, setLineNumbersSquaresData] = useState<LineNumberSquareData>([]);
 
+  const [lineNumbersSquaresData, setLineNumbersSquaresData] = useState<LineNumberSquareData>([]);
+  const { symbolSize } = useContext<ReelsContextData>(ReelsContext);
   const getYCoordOffset = useCallback(
     (lineNumber: number): number => {
       let offset: number = 0;
@@ -126,21 +127,9 @@ const PayLines: React.FC = () => {
     });
   }, [drawPayLine, getPayLinesMetadata, getLineNumberSquaresData]);
 
-  const updateSymbolSize = useCallback(() => {
-    if (window.matchMedia('(max-width: 480px)').matches && symbolSize !== SYMBOL_SIZE_SMALL) {
-      setSymbolSize(SYMBOL_SIZE_SMALL);
-    }
-    if (window.matchMedia('(min-width: 480px)').matches && symbolSize !== SYMBOL_SIZE) {
-      setSymbolSize(SYMBOL_SIZE);
-    }
-  }, [symbolSize]);
-
   useEffect(() => {
-    updateSymbolSize();
-    window.addEventListener('resize', updateSymbolSize);
-
-    return () => window.removeEventListener('resize', updateSymbolSize);
-  }, [updateSymbolSize]);
+    drawCanvas();
+  }, [symbolSize, drawCanvas]);
 
   return (
     <CSSTransition
