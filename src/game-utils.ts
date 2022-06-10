@@ -89,13 +89,15 @@ const areSymbolsNotMatched = (symbolAType: SymbolType, symbolB: Symbol): boolean
     symbolAType === EXPLOSIVE_METADATA.type ||
     (symbolAType !== WILDCARD_METADATA.type && symbolB.type !== WILDCARD_METADATA.type));
 
-export const getScreenWithBonusWildcards = (slotScreen: Symbol[][]): Symbol[][] => {
-  const slotScreenCopy: Symbol[][] = deepClone<Symbol[][]>(slotScreen);
+export const getScreenWithBonusWildcards = (
+  slotScreen: Symbol[][]
+): { wildcardsPositions: Position[]; slotScreenWithWildcards: Symbol[][] } => {
+  const slotScreenWithWildcards: Symbol[][] = deepClone<Symbol[][]>(slotScreen);
   const wildcardsPositions: Position[] = getWildcardPositions();
   for (const { reel, row } of wildcardsPositions) {
-    slotScreenCopy[reel][row] = { ...WILDCARD_METADATA, id: nanoid() };
+    slotScreenWithWildcards[reel][row] = { ...WILDCARD_METADATA, id: nanoid() };
   }
-  return slotScreenCopy;
+  return { wildcardsPositions, slotScreenWithWildcards };
 };
 
 const getPayLineResult = (slotScreen: Symbol[][], payLine: PayLine): PayLineResult => {
@@ -198,5 +200,3 @@ export const getScreenResult = (slotScreen: Symbol[][]): SlotScreenResult => {
     freeSpins,
   };
 };
-
-

@@ -17,7 +17,7 @@ interface ModalProps extends HTMLAttributes<HTMLDivElement> {
   onCloseModal: () => void;
 }
 
-const Modal = ({ title, description, showModal, children, onCloseModal }: ModalProps) => {
+const Modal: React.FC<ModalProps> = ({ title, description, showModal, children, onCloseModal }) => {
   const element = document.getElementById('modal') as HTMLElement;
   const modalRef = useRef<HTMLDivElement>(null);
   const [t] = useTranslation();

@@ -1,3 +1,4 @@
+import { LIGHTS_NUMBER } from '@/game-configs';
 import styles from './styles.module.scss';
 
 interface LightsProps {
@@ -7,7 +8,7 @@ interface LightsProps {
 const Lights: React.FC<LightsProps> = ({ blink }) => {
   return (
     <div className={styles['lights']}>
-      {[...Array(5)].map((_, index) => (
+      {[...Array(LIGHTS_NUMBER)].map((_, index) => (
         <div
           key={`light-${index}`}
           className={`${styles['lights__light']} ${blink ? styles['lights__light--blink'] : ''}`}
