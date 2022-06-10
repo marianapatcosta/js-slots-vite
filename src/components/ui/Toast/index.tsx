@@ -39,9 +39,9 @@ const Toast: React.FunctionComponent<ToastProps & RefAttributes<HTMLDivElement>>
       if (!autoDismissable) {
         return;
       }
-      const timer = setTimeout(onToastDismiss, timeToAutoDismiss);
+      const timerId = setTimeout(onToastDismiss, timeToAutoDismiss);
 
-      return () => clearTimeout(timer);
+      return () => clearTimeout(timerId);
     }, [autoDismissable, timeToAutoDismiss, onToastDismiss]);
 
     return (
