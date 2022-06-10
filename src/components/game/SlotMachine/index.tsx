@@ -1,9 +1,13 @@
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useTranslation } from 'react-i18next';
 import { nanoid } from 'nanoid';
 import { Controllers, Reels, WinsDisplay } from '@/components';
-import { ANIMATE_RESULTS_DURATION, ROW_NUMBER } from '@/game-configs';
+import {
+  ANIMATE_RESULTS_DURATION,
+  ROW_NUMBER,
+  SYMBOL_SIZE,
+  SYMBOL_SIZE_SMALL,
+} from '@/game-configs';
 import { ModalType, SlotScreenResult, Symbol } from '@/types';
 import {
   SPIN_ENDED,
@@ -23,11 +27,11 @@ import { State } from '@/store/types';
 import { ModalContext, ModalContextData } from '@/context/ModalContext';
 import { LoseSound, SlotWheelSound, ThemeSound, WinSound } from '@/assets/sounds';
 import { deepClone, getRandomNumber } from '@/utils';
-import styles from './styles.module.scss';
 import { ReelsContext } from '@/context/ReelsContext';
+import styles from './styles.module.scss';
+import { useSymbolSize } from '@/hooks';
 
 const SlotMachine: React.FC = () => {
-  const [t] = useTranslation();
   const [reels, setReels] = useState<Symbol[][]>([]);
   const isMusicOn: boolean = useSelector((state: State) => state.settings.isMusicOn);
   const isSoundOn: boolean = useSelector((state: State) => state.settings.isSoundOn);
@@ -40,6 +44,7 @@ const SlotMachine: React.FC = () => {
     (state: State) => state.slotMachine.resetGameOnMount
   );
   const [finalSlotScreen, setFinalSlotScreens] = useState<Symbol[][]>([]);
+  const symbolSize: number = useSymbolSize();
 
   const dispatch = useDispatch();
   const { openModal } = useContext<ModalContextData>(ModalContext);
@@ -87,8 +92,6 @@ const SlotMachine: React.FC = () => {
       return reel.slice(randomIndex, randomIndex + ROW_NUMBER);
     });
     setFinalSlotScreens(slotScreen);
-
-    console.log(222, slotScreen);
   }, [reels, isSoundOn, slotWheelSound, bet, credits, dispatch]);
 
   const onReelAnimationEnd = useCallback(
@@ -106,7 +109,6 @@ const SlotMachine: React.FC = () => {
 
   const onSpinningEnd = useCallback(() => {
     slotWheelSound.pause();
-    console.log(3333, finalSlotScreen);
     let slotResult: SlotScreenResult = getScreenResult(finalSlotScreen);
 
     if (!slotResult.winAmount && wonBonusWildCards()) {
@@ -115,14 +117,7 @@ const SlotMachine: React.FC = () => {
       setFinalSlotScreens(slotScreenWithWildcards);
       slotResult = getScreenResult(slotScreenWithWildcards);
       dispatch({ type: BONUS_WILD_CARDS_WON, payload: wildcardsPositions });
-      console.log(999, {
-        reels,
-        slotScreenWithWildCards: slotScreenWithWildcards,
-        finalSlotScreen,
-        slotResult,
-      });
     }
-    console.log(666, { reels, finalSlotScreen, slotResult });
     if (!!slotResult.winPayLines.length) {
       isSoundOn && winSound.play();
     }
@@ -139,7 +134,6 @@ const SlotMachine: React.FC = () => {
 
     setTimeout(() => {
       dispatch({ type: NEW_SPIN_PREPARED });
-      console.log(4444);
       // setFinalSlotScreens([]);
       // TODO remove added symbols from array and shuffle the non visible symbols
       if (isAutoSpinOn) {
@@ -187,7 +181,7 @@ const SlotMachine: React.FC = () => {
   return (
     <div className={styles['slot-machine']}>
       <WinsDisplay />
-      <ReelsContext.Provider value={{ onReelAnimationEnd, onSpinningEnd }}>
+      <ReelsContext.Provider value={{ symbolSize, onReelAnimationEnd, onSpinningEnd }}>
         <Reels reels={reels} />
       </ReelsContext.Provider>
       <Controllers isSpinning={isSpinning} onSpin={onSpin} />

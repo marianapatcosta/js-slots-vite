@@ -4,7 +4,7 @@
   grid-template-columns: repeat($reels-number, 1fr);
   column-gap: 0.25rem; 
   padding: 0.625rem;
-  width: 100%;
+  width: max-content;
   height: calc($rows-number * $symbol-size-small + $reels-padding * 2);
   border-radius: 0.5rem;
   -webkit-border-radius: 0.5rem;

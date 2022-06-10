@@ -35,7 +35,7 @@
 
   &--showing {
     opacity: 0;
-    top: calc($symbol-size * var(--symbol-index));
+    top: calc($symbol-size-small * var(--symbol-index));
     animation: fade-in 1s 0.2s ease-in forwards;
     -webkit-animation: fade-in 1s 0.2s ease-in forwards;
     transform: scale(0);
@@ -51,10 +51,17 @@
   .symbol {
     width: calc($symbol-size);
     height: calc($symbol-size);
+
+    &--showing {
+      top: calc($symbol-size * var(--symbol-index));
+    }
   }
 }
 
 @keyframes fade-in {
+  0% {
+    background-color: var(--bg-color-from);
+  }
   100% {
     opacity: 1;
     transform: scale(1);
@@ -63,6 +70,7 @@
     -ms-transform: scale(1);
     -o-transform: scale(1);
     z-index: 0;
+    background-color: var(--bg-color-to);
   }
 }
 

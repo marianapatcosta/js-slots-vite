@@ -11,7 +11,7 @@ const BabylonSvg: React.FC<SymbolSvgProps> = ({ animate }) => {
       width="50"
       height="50"
       className={animate ? styles.icon : ''}
-      viewBox="50 50 300 280"
+      viewBox="60 60 325 280"
       xmlns="http://www.w3.org/2000/svg"
     >
       <title>babylon_logo_color</title>
