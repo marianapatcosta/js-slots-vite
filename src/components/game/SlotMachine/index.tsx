@@ -87,6 +87,8 @@ const SlotMachine: React.FC = () => {
       return reel.slice(randomIndex, randomIndex + ROW_NUMBER);
     });
     setFinalSlotScreens(slotScreen);
+
+    console.log(222, slotScreen);
   }, [reels, isSoundOn, slotWheelSound, bet, credits, dispatch]);
 
   const onReelAnimationEnd = useCallback(
@@ -104,6 +106,7 @@ const SlotMachine: React.FC = () => {
 
   const onSpinningEnd = useCallback(() => {
     slotWheelSound.pause();
+    console.log(3333, finalSlotScreen);
     let slotResult: SlotScreenResult = getScreenResult(finalSlotScreen);
 
     if (!slotResult.winAmount && wonBonusWildCards()) {
@@ -112,7 +115,14 @@ const SlotMachine: React.FC = () => {
       setFinalSlotScreens(slotScreenWithWildcards);
       slotResult = getScreenResult(slotScreenWithWildcards);
       dispatch({ type: BONUS_WILD_CARDS_WON, payload: wildcardsPositions });
+      console.log(999, {
+        reels,
+        slotScreenWithWildCards: slotScreenWithWildcards,
+        finalSlotScreen,
+        slotResult,
+      });
     }
+    console.log(666, { reels, finalSlotScreen, slotResult });
     if (!!slotResult.winPayLines.length) {
       isSoundOn && winSound.play();
     }
@@ -129,6 +139,8 @@ const SlotMachine: React.FC = () => {
 
     setTimeout(() => {
       dispatch({ type: NEW_SPIN_PREPARED });
+      console.log(4444);
+      // setFinalSlotScreens([]);
       // TODO remove added symbols from array and shuffle the non visible symbols
       if (isAutoSpinOn) {
         onSpin();
@@ -145,6 +157,7 @@ const SlotMachine: React.FC = () => {
     finalSlotScreen,
     onSpin,
     openModal,
+    reels,
   ]);
 
   useEffect(() => {
