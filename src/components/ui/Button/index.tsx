@@ -1,4 +1,4 @@
-import { HTMLAttributes, MouseEvent, useCallback, useEffect, useMemo } from 'react';
+import { HTMLAttributes, MouseEvent, useCallback } from 'react';
 import styles from './styles.module.scss';
 
 interface ButtonProps extends HTMLAttributes<HTMLButtonElement> {

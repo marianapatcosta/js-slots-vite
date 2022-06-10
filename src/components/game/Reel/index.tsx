@@ -20,8 +20,8 @@ const Reel: React.FC<ReelProps> = ({ symbols: reel, reelIndex, animationDuration
   const areSlotsSpinning = useSelector((state: State) => state.slotMachine.isSpinning);
   const [isReelSpinning, setIsReelsSpinning] = useState<boolean>(false);
   const reelRef = useRef<HTMLDivElement>(null);
-  const spinAnimationRef = useRef<gsap.core.Tween | null>(null);
   const reelSelector: gsap.utils.SelectorFunc = gsap.utils.selector(reelRef);
+  const [spinAnimation, setSpinAnimation] = useState<gsap.core.Tween | null>(null);
 
   const bonusWildCardsPositions: Position[] = useSelector(
     (state: State) => state.slotMachine.bonusWildcardsPositions
@@ -43,32 +43,35 @@ const Reel: React.FC<ReelProps> = ({ symbols: reel, reelIndex, animationDuration
       return;
     }
     setIsReelsSpinning(true);
-    spinAnimationRef.current?.play();
-  }, [areSlotsSpinning]);
+    spinAnimation?.play();
+  }, [areSlotsSpinning, spinAnimation]);
 
   useEffect(() => {
     const symbolSizeInPx: number = remToPixel(symbolSize);
     gsap.set(`#symbol-${reelIndex}`, {
       y: (index: number) => index * symbolSizeInPx,
     });
+
     const reelHeight: number = reel.length * symbolSizeInPx;
     const wrapOffsetTop: number = -symbolSizeInPx;
     const wrapOffsetBottom: number = reelHeight + wrapOffsetTop;
     const wrap = gsap.utils.wrap(wrapOffsetTop, wrapOffsetBottom);
-    spinAnimationRef.current = gsap.to(reelSelector(`#symbol-${reelIndex}`), {
-      duration: animationDuration,
-      y: `+=${reelHeight}`,
-      ease: 'power1.in',
-      modifiers: {
-        y: gsap.utils.unitize(wrap),
-      },
-      onComplete: onSpinningAnimationEnd,
-    });
-    spinAnimationRef.current.pause();
+    setSpinAnimation(
+      gsap.to(reelSelector(`#symbol-${reelIndex}`), {
+        duration: animationDuration,
+        y: `+=${reelHeight}`,
+        ease: 'power1.in',
+        paused: true,
+        modifiers: {
+          y: gsap.utils.unitize(wrap),
+        },
+        onComplete: onSpinningAnimationEnd,
+      })
+    );
     return () => {
-      spinAnimationRef.current?.kill();
+      spinAnimation?.kill();
     };
-  }, [reelSelector, reelIndex, reel, symbolSize, animationDuration, onSpinningAnimationEnd]);
+  }, []);
 
   return (
     <div className={styles.reel} ref={reelRef}>

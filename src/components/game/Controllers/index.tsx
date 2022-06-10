@@ -8,7 +8,6 @@ import {
   AUTO_SPIN_STATE_CHANGED,
   BET_UPDATED,
   SHOW_PAY_LINES_STATE_CHANGED,
-  SPAN,
 } from '@/store/action-types';
 import { ButtonIcon } from '@/components/ui/ButtonIcon';
 import { InfoSvg, SettingsSvg } from '@/assets/svg';
