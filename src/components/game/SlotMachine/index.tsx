@@ -44,6 +44,7 @@ const SlotMachine: React.FC = () => {
   const dispatch = useDispatch();
   const { openModal } = useContext<ModalContextData>(ModalContext);
 
+  const [userAlreadyInteract, setUserAlreadyInteract] = useState<boolean>(false);
   const themeMusic: HTMLAudioElement = useMemo(() => new Audio(ThemeSound), []);
   const slotWheelSound: HTMLAudioElement = useMemo(() => new Audio(SlotWheelSound), []);
   const winSound: HTMLAudioElement = useMemo(() => new Audio(WinSound), []);
@@ -65,8 +66,6 @@ const SlotMachine: React.FC = () => {
       return;
     }
 
-    themeMusic.muted = true;
-    themeMusic.autoplay = true;
     themeMusic.play();
     themeMusic.loop = true;
     themeMusic.volume = 0.75;
@@ -88,7 +87,6 @@ const SlotMachine: React.FC = () => {
       return reel.slice(randomIndex, randomIndex + ROW_NUMBER);
     });
     setFinalSlotScreens(slotScreen);
-
   }, [reels, isSoundOn, slotWheelSound, bet, credits, dispatch]);
 
   const onReelAnimationEnd = useCallback(
@@ -115,7 +113,6 @@ const SlotMachine: React.FC = () => {
       slotResult = getScreenResult(slotScreenWithWildcards);
       dispatch({ type: BONUS_WILD_CARDS_WON, payload: wildcardsPositions });
     }
-   
     if (!!slotResult.winPayLines.length) {
       isSoundOn && winSound.play();
     }
@@ -132,7 +129,6 @@ const SlotMachine: React.FC = () => {
 
     setTimeout(() => {
       dispatch({ type: NEW_SPIN_PREPARED });
-   
       // TODO remove added symbols from array and shuffle the non visible symbols
       if (isAutoSpinOn) {
         onSpin();
@@ -149,7 +145,6 @@ const SlotMachine: React.FC = () => {
     finalSlotScreen,
     onSpin,
     openModal,
-    reels,
   ]);
 
   useEffect(() => {
@@ -162,18 +157,19 @@ const SlotMachine: React.FC = () => {
     };
   }, []);
 
-  /*  useEffect(() => {
-    if (isMusicOn) {
+  useEffect(() => {
+    if (isMusicOn && userAlreadyInteract) {
       return playThemeMusic();
     }
 
     themeMusic.pause();
-  }, [isMusicOn, themeMusic, playThemeMusic]);
+  }, [isMusicOn, themeMusic, playThemeMusic, userAlreadyInteract]);
 
- useEffect(() => {
-    document.addEventListener('mousemove', playThemeMusic);
-    return () => document.removeEventListener('mousemove', playThemeMusic);
-  }, [playThemeMusic]); */
+  useEffect(() => {
+    const updateSetUserAlreadyInteract = (): void => setUserAlreadyInteract(true);
+    document.addEventListener('click', updateSetUserAlreadyInteract);
+    return () => document.removeEventListener('click', updateSetUserAlreadyInteract);
+  }, []);
 
   return (
     <div className={styles['slot-machine']}>
