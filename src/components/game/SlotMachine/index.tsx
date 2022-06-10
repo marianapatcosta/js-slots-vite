@@ -151,7 +151,6 @@ const SlotMachine: React.FC = () => {
     finalSlotScreen,
     onSpin,
     openModal,
-    reels,
   ]);
 
   useEffect(() => {
