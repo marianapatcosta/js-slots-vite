@@ -11,7 +11,7 @@ const ReduxSvg: React.FC<SymbolSvgProps> = ({ animate }) => {
       width="50"
       height="50"
       className={animate ? styles.icon : ''}
-      viewBox="0 0 158 158"
+      viewBox="0 0 120 158"
       xmlns="http://www.w3.org/2000/svg"
     >
       <path

@@ -53,7 +53,7 @@ export enum SymbolType {
 export type Symbol = {
   id: string;
   type: SymbolType;
-  icon: React.FC<{ animate: boolean }>;
+  icon: React.FC<{ animate?: boolean }>;
   frequency?: number;
   winFactor?: number[];
   loseFactor?: number[];
@@ -97,7 +97,7 @@ export enum Color {
   RED = '#b33030',
   YELLOW = '#f1c40f',
   ORANGE = '#fd891c',
-  DARK_BLUE = '#124c7c',
+  DARK_BLUE = '#1e64af',
   LIGHT_GREEN = '#80ca80',
   PURPLE = '#3f1347',
   GREY = '#d8d8d8',
