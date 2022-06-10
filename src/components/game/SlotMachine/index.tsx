@@ -5,7 +5,14 @@ import { nanoid } from 'nanoid';
 import { Controllers, Reels, WinsDisplay } from '@/components';
 import { ANIMATE_RESULTS_DURATION, ROW_NUMBER } from '@/game-configs';
 import { ModalType, SlotScreenResult, Symbol } from '@/types';
-import { SPIN_ENDED, GAME_RESET, GAME_LEFT, NEW_SPIN_PREPARED, SPAN } from '@/store/action-types';
+import {
+  SPIN_ENDED,
+  GAME_RESET,
+  GAME_LEFT,
+  NEW_SPIN_PREPARED,
+  SPAN,
+  BONUS_WILD_CARDS_WON,
+} from '@/store/action-types';
 import {
   getScreenResult,
   getScreenWithBonusWildcards,
@@ -19,7 +26,7 @@ import { deepClone, getRandomNumber } from '@/utils';
 import styles from './styles.module.scss';
 import { ReelsContext } from '@/context/ReelsContext';
 
-const SlotMachine = () => {
+const SlotMachine: React.FC = () => {
   const [t] = useTranslation();
   const [reels, setReels] = useState<Symbol[][]>([]);
   const isMusicOn: boolean = useSelector((state: State) => state.settings.isMusicOn);
@@ -69,9 +76,9 @@ const SlotMachine = () => {
     if (bet > credits) {
       return;
     }
-    const action = { type: SPAN };
 
-    dispatch(action);
+    dispatch({ type: SPAN });
+
     if (isSoundOn) {
       slotWheelSound.play();
       slotWheelSound.loop = true;
@@ -81,6 +88,7 @@ const SlotMachine = () => {
       return reel.slice(randomIndex, randomIndex + ROW_NUMBER);
     });
     setFinalSlotScreens(slotScreen);
+
   }, [reels, isSoundOn, slotWheelSound, bet, credits, dispatch]);
 
   const onReelAnimationEnd = useCallback(
@@ -89,7 +97,7 @@ const SlotMachine = () => {
         prevReels.map((reel, index) =>
           reelIndex !== index
             ? reel
-            : [...finalSlotScreen[index].map(item => ({ ...item, id: nanoid() })), ...reel]
+            : [...finalSlotScreen[reelIndex].map(item => ({ ...item, id: nanoid() })), ...reel]
         )
       );
     },
@@ -100,12 +108,14 @@ const SlotMachine = () => {
     slotWheelSound.pause();
     let slotResult: SlotScreenResult = getScreenResult(finalSlotScreen);
 
-    // TODO ANIMATE SYMBOLS TO CHANGE TO TS if wonBonus
     if (!slotResult.winAmount && wonBonusWildCards()) {
-      const screenWithWildcards = getScreenWithBonusWildcards(finalSlotScreen);
-      slotResult = getScreenResult(screenWithWildcards);
+      const { wildcardsPositions, slotScreenWithWildcards } =
+        getScreenWithBonusWildcards(finalSlotScreen);
+      setFinalSlotScreens(slotScreenWithWildcards);
+      slotResult = getScreenResult(slotScreenWithWildcards);
+      dispatch({ type: BONUS_WILD_CARDS_WON, payload: wildcardsPositions });
     }
-
+   
     if (!!slotResult.winPayLines.length) {
       isSoundOn && winSound.play();
     }
@@ -122,7 +132,7 @@ const SlotMachine = () => {
 
     setTimeout(() => {
       dispatch({ type: NEW_SPIN_PREPARED });
-      setFinalSlotScreens([]);
+   
       // TODO remove added symbols from array and shuffle the non visible symbols
       if (isAutoSpinOn) {
         onSpin();
@@ -139,6 +149,7 @@ const SlotMachine = () => {
     finalSlotScreen,
     onSpin,
     openModal,
+    reels,
   ]);
 
   useEffect(() => {

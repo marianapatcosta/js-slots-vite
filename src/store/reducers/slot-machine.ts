@@ -1,5 +1,5 @@
 import { DEFAULT_BET, INITIAL_CREDITS } from '@/game-configs';
-import { PayLine, SlotScreenResult } from '@/types';
+import { PayLine, Position, SlotScreenResult } from '@/types';
 import {
   AUTO_SPIN_STATE_CHANGED,
   SHOW_PAY_LINES_STATE_CHANGED,
@@ -12,6 +12,7 @@ import {
   BET_UPDATED,
   GAME_LEFT,
   NEW_SPIN_PREPARED,
+  BONUS_WILD_CARDS_WON,
 } from '../action-types';
 
 export interface State {
@@ -25,6 +26,7 @@ export interface State {
   readonly showPayLines: boolean;
   readonly winPayLines: PayLine[];
   readonly losePayLines: PayLine[];
+  readonly bonusWildcardsPositions: Position[];
 }
 
 const initialState: State = {
@@ -38,6 +40,7 @@ const initialState: State = {
   resetGameOnMount: null,
   winPayLines: [],
   losePayLines: [],
+  bonusWildcardsPositions: [],
 };
 
 export type Action =
@@ -51,6 +54,7 @@ export type Action =
   | { type: typeof GAME_RESET }
   | { type: typeof GAME_LEFT }
   | { type: typeof NEW_SPIN_PREPARED }
+  | { type: typeof BONUS_WILD_CARDS_WON; payload: Position[] }
   | { type: typeof RESET_MODAL_DISMISSED; payload: boolean };
 
 export const reducer = (state = initialState, action: Action): State => {
@@ -84,6 +88,7 @@ export const reducer = (state = initialState, action: Action): State => {
         winPayLines: [],
         showPayLines: false,
         hasOngoingGame: true,
+        bonusWildcardsPositions: [],
       };
     case SPIN_ENDED:
       const { winAmount, freeSpins, winPayLines, losePayLines } = action.payload;
@@ -107,6 +112,11 @@ export const reducer = (state = initialState, action: Action): State => {
         ...state,
         showPayLines: action.payload,
       };
+    case BONUS_WILD_CARDS_WON:
+      return {
+        ...state,
+        bonusWildcardsPositions: action.payload,
+      };
     case NEW_SPIN_PREPARED:
       return {
         ...state,
@@ -120,6 +130,7 @@ export const reducer = (state = initialState, action: Action): State => {
         isSpinning: false,
         isAutoSpinOn: false,
         showPayLines: false,
+        bonusWildcardsPositions: [],
       };
     case GAME_RESET:
       return {
