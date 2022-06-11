@@ -13,7 +13,8 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      base: '/',
+      base: '/js-slots-vite/',
+      scope: '/js-slots-vite/',
       srcDir: 'src',
       filename: 'sw.ts',
       includeAssets: ['favicon.svg', 'favicon.ico', 'robots.txt', 'apple-touch-icon.png'],
