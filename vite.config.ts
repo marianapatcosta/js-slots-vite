@@ -4,6 +4,7 @@ import { VitePWA } from 'vite-plugin-pwa';
 const path = require('path');
 
 export default defineConfig({
+  base: 'js-slots-vite',
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
