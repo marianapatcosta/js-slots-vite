@@ -24,7 +24,7 @@ export default defineConfig({
         theme_color: '#06080f',
         description:
           'JS Slot Machine is a regular slot machine game that has the logos of main JS-related tools as symbols.',
-        start_url: '/',
+        start_url: '/js-slots-vite',
         display: 'standalone',
         background_color: '#06080f',
         icons: [
