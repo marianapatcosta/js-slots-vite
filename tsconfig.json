@@ -17,14 +17,17 @@
     "jsx": "react-jsx",
     "baseUrl": "./",
     "paths": {
-      "@/*": ["./src/*"]
-    }
+      "@/*": ["./src/*"],
+      "virtual:pwa-register/react": ["node_modules/vite-plugin-pwa"]
+    },
+    "types": ["reflect-metadata", "jest", "node", "vite-plugin-pwa/client.d.ts"]
   },
+  "files": ["node_modules/vite-plugin-pwa/client.d.ts"],
   "include": [
     "src/**/*.ts",
     "src/**/*.d.ts",
     "src/**/*.tsx",
-    "node_modules/vite-plugin-pwa/vue.d.ts"
+    "node_modules/vite-plugin-pwa/client.d.ts"
   ],
   "exclude": ["dist", "node_modules", "**/*.worker.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
