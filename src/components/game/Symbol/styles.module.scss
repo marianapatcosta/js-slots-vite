@@ -6,6 +6,7 @@
   will-change: transform;
   transform-origin: center;
   position: absolute;
+  top: calc($symbol-size-small * var(--symbol-index));
 
   svg {
     width: 75%;
@@ -51,10 +52,7 @@
   .symbol {
     width: calc($symbol-size);
     height: calc($symbol-size);
-
-    &--showing {
-      top: calc($symbol-size * var(--symbol-index));
-    }
+    top: calc($symbol-size * var(--symbol-index));
   }
 }
 

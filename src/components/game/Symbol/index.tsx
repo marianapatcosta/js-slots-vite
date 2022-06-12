@@ -68,7 +68,6 @@ const Symbol: React.FC<SymbolProps> = ({
 
   return (
     <div
-      id={isBonusWildCard ? undefined : `symbol-${reelIndex}`}
       className={`${styles.symbol} ${isSpinning ? styles['symbol--spinning'] : ''} ${
         willBeReplacedByBonusWildCardSymbol ? styles['symbol--hidden'] : ''
       } ${isBonusWildCard ? styles['symbol--showing'] : ''} ${

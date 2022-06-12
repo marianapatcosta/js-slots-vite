@@ -82,7 +82,7 @@ const SlotMachine: React.FC = () => {
     }
 
     dispatch({ type: SPAN });
-
+    console.log(3333, { finalSlotScreen, reels });
     if (isSoundOn) {
       slotWheelSound.play();
       slotWheelSound.loop = true;
@@ -91,11 +91,15 @@ const SlotMachine: React.FC = () => {
       const randomIndex = getRandomNumber(0, reel.length - ROW_NUMBER);
       return reel.slice(randomIndex, randomIndex + ROW_NUMBER);
     });
+
     setFinalSlotScreens(slotScreen);
+
+    console.log(222, slotScreen);
   }, [reels, isSoundOn, slotWheelSound, bet, credits, dispatch]);
 
   const onReelAnimationEnd = useCallback(
     (reelIndex: number): void => {
+      console.log(8888);
       setReels(prevReels =>
         prevReels.map((reel, index) =>
           reelIndex !== index
@@ -108,6 +112,7 @@ const SlotMachine: React.FC = () => {
   );
 
   const onSpinningEnd = useCallback(() => {
+    console.log(666);
     slotWheelSound.pause();
     let slotResult: SlotScreenResult = getScreenResult(finalSlotScreen);
 
@@ -118,6 +123,7 @@ const SlotMachine: React.FC = () => {
       slotResult = getScreenResult(slotScreenWithWildcards);
       dispatch({ type: BONUS_WILD_CARDS_WON, payload: wildcardsPositions });
     }
+
     if (!!slotResult.winPayLines.length) {
       isSoundOn && winSound.play();
     }
@@ -131,7 +137,9 @@ const SlotMachine: React.FC = () => {
       openModal(ModalType.RESET, { hasNoCredits: true });
       return;
     }
-
+    // prepare
+    const shuffledReels = getShuffledReels();
+    setReels(prevReels => [...prevReels.slice(0, ROW_NUMBER), ...shuffledReels.slice(ROW_NUMBER)]);
     setTimeout(() => {
       dispatch({ type: NEW_SPIN_PREPARED });
       // setFinalSlotScreens([]);
@@ -153,9 +161,33 @@ const SlotMachine: React.FC = () => {
     openModal,
   ]);
 
+  const prepareReelsToSpin = useCallback((): void => {
+    const shuffledReels = getShuffledReels().map(r => r.slice(0, 7));
+    setReels(shuffledReels);
+    const slotScreen: Symbol[][] = shuffledReels.map(reel => {
+      const randomIndex = getRandomNumber(0, reel.length - ROW_NUMBER);
+      return reel.slice(randomIndex, randomIndex + ROW_NUMBER);
+    });
+    setReels(
+      shuffledReels.map((reel, index) => [
+        ...slotScreen[index].map(item => ({ ...item, id: nanoid() })),
+        ...reel,
+      ])
+    );
+    setFinalSlotScreens(slotScreen);
+  }, [reels]);
+
   useEffect(() => {
+    // prepareReelsToSpin();
     const shuffledReels = getShuffledReels();
     setReels(shuffledReels);
+    const slotScreen: Symbol[][] = shuffledReels.map(reel => {
+      const randomIndex = getRandomNumber(0, reel.length - ROW_NUMBER);
+      return reel.slice(randomIndex, randomIndex + ROW_NUMBER);
+    });
+
+    setFinalSlotScreens(slotScreen);
+
     setGameConfigs();
 
     return () => {

@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { useCallback, useContext, useEffect, useRef, useState, memo } from 'react';
 import gsap from 'gsap';
 import { useSelector } from 'react-redux';
 import { nanoid } from 'nanoid';
@@ -16,7 +16,7 @@ interface ReelProps {
   animationDuration: number;
 }
 
-const Reel: React.FC<ReelProps> = ({ symbols: reel, reelIndex, animationDuration }) => {
+const Reel: React.FC<ReelProps> = memo(({ symbols: reel, reelIndex, animationDuration }) => {
   const areSlotsSpinning = useSelector((state: State) => state.slotMachine.isSpinning);
   const [isReelSpinning, setIsReelsSpinning] = useState<boolean>(false);
   const reelRef = useRef<HTMLDivElement>(null);
@@ -32,11 +32,11 @@ const Reel: React.FC<ReelProps> = ({ symbols: reel, reelIndex, animationDuration
 
   const onSpinningAnimationEnd = useCallback(() => {
     setIsReelsSpinning(false);
-    onReelAnimationEnd(reelIndex);
+     onReelAnimationEnd(reelIndex);
     if (reelIndex === REELS_NUMBER - 1) {
       onSpinningEnd();
     }
-  }, [reelIndex, onReelAnimationEnd, onSpinningEnd]);
+  }, [reelIndex, /* onReelAnimationEnd, */ onSpinningEnd]);
 
   useEffect(() => {
     if (!areSlotsSpinning) {
@@ -48,23 +48,24 @@ const Reel: React.FC<ReelProps> = ({ symbols: reel, reelIndex, animationDuration
 
   useEffect(() => {
     const symbolSizeInPx: number = remToPixel(symbolSize);
-    gsap.set(`#symbol-${reelIndex}`, {
-      y: (index: number) => index * symbolSizeInPx,
-    });
+  /*   gsap.set(reelRef.current, {
+      y: (reel.length - ROW_NUMBER) * -symbolSizeInPx,
+    }); */
 
-    const reelHeight: number = reel.length * symbolSizeInPx;
+    const reelHeight: number = (reel.length - ROW_NUMBER) * symbolSizeInPx;
     const wrapOffsetTop: number = -symbolSizeInPx;
     const wrapOffsetBottom: number = reelHeight + wrapOffsetTop;
     const wrap = gsap.utils.wrap(wrapOffsetTop, wrapOffsetBottom);
     setSpinAnimation(
-      gsap.to(reelSelector(`#symbol-${reelIndex}`), {
+      gsap.to(reelRef.current, {
         duration: animationDuration,
-        y: `+=${reelHeight}`,
+      //  y: `+=${reelHeight}`,
+        y: `-=${reelHeight}`,
         ease: 'power1.in',
         paused: true,
-        modifiers: {
+      /*   modifiers: {
           y: gsap.utils.unitize(wrap),
-        },
+        }, */
         onComplete: onSpinningAnimationEnd,
       })
     );
@@ -74,16 +75,18 @@ const Reel: React.FC<ReelProps> = ({ symbols: reel, reelIndex, animationDuration
   }, []);
 
   return (
-    <div className={styles.reel} ref={reelRef}>
-      {reel.map((symbol, index) => (
-        <SymbolComponent
-          symbol={symbol}
-          isSpinning={isReelSpinning}
-          key={symbol.id}
-          reelIndex={reelIndex}
-          symbolIndex={index < ROW_NUMBER ? index : null}
-        />
-      ))}
+    <div className={styles.reel}>
+      <div ref={reelRef} style={{ position: 'absolute' }}>
+        {reel.map((symbol, index) => (
+          <SymbolComponent
+            symbol={symbol}
+            isSpinning={isReelSpinning}
+            key={symbol.id}
+            reelIndex={reelIndex}
+            symbolIndex={index}
+          />
+        ))}
+      </div>
       {!!bonusWildCardsPositions.length &&
         bonusWildCardsPositions.map(({ reel, row }) => (
           <SymbolComponent
@@ -96,6 +99,6 @@ const Reel: React.FC<ReelProps> = ({ symbols: reel, reelIndex, animationDuration
         ))}
     </div>
   );
-};
+});
 
 export { Reel };
